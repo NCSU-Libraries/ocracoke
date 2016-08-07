@@ -1,0 +1,10 @@
+---
+- name: disable selinux
+  selinux: state=disabled
+- name: install firewalld
+  yum: pkg=firewalld state=latest
+- name: punch holes in firewall before starting firewalld
+  command: /bin/firewall-offline-cmd --add-port={{item}}/tcp
+  with_items: "{{ports}}"
+- name: start firewalld
+  service: name=firewalld enabled=yes state=started

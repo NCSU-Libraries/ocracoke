@@ -1,0 +1,8 @@
+---
+- name: install java
+  yum:
+    pkg: "{{item}}"
+    state: latest
+  with_items:
+    - java-{{version}}-openjdk
+    - java-{{version}}-openjdk-devel

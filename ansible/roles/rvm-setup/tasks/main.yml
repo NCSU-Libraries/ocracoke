@@ -1,0 +1,9 @@
+---
+- name: add users to rvm group
+  command: /bin/bash -lc 'rvm group add rvm {{item}}'
+  with_items: "{{users}}"
+- name: auto-dotfiles
+  command: /bin/bash -lc 'rvm get stable --auto-dotfiles'
+- name: rvm fix-permissions system
+  command: /bin/bash -lc 'rvm fix-permissions :rvm'
+# - TODO: name: fix bundler permissions
