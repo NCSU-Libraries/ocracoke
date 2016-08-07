@@ -13,10 +13,10 @@ json.resource do
 end
 
 page_word_list = @pages_json[doc[:id]]
-xywh = if !@pages_json[doc[:id]] || page_word_list[word].nil? || page_word_list[word][doc[:time]].nil?
+xywh = if !@pages_json[doc[:id]] || page_word_list[word].nil? 
   "0,0,0,0"
 else
-  word_bounds = page_word_list[word][doc[:time]]
+  word_bounds = page_word_list[word].shift
   # FIXME: This is the wrong place to set all of these to integers
   x = word_bounds["x0"].to_i
   y = word_bounds["y0"].to_i
