@@ -5,14 +5,15 @@ json.motivation 'sc:painting'
 
 match_data = doc[:snippet].match /<em>(.*?)<\/em>/
 word = match_data[1]
+# wordd = word.downcase
 
 json.resource do
   json.set! '@type',  "cnt:ContentAsText"
   json.chars word
 end
 
-page_word_list = @pages_json[doc[:filename]]
-xywh = if !@pages_json[doc[:filename]] || page_word_list[word].nil? || page_word_list[word][doc[:time]].nil?
+page_word_list = @pages_json[doc[:id]]
+xywh = if !@pages_json[doc[:id]] || page_word_list[word].nil? || page_word_list[word][doc[:time]].nil?
   "0,0,0,0"
 else
   word_bounds = page_word_list[word][doc[:time]]
@@ -24,4 +25,4 @@ else
   "#{x},#{y},#{w},#{h}"
 end
 
-json.on manifest_image_api_id(doc[:filename]) + "/canvas#xywh=#{xywh}"
+json.on manifest_image_api_id(doc[:id]) + "/canvas#xywh=#{xywh}"
