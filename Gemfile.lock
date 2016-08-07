@@ -55,7 +55,9 @@ GEM
     ffi (1.9.14)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    httpclient (2.8.1)
     i18n (0.7.0)
+    iiif_url (0.0.3)
     jbuilder (2.6.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -159,6 +161,8 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coffee-rails (~> 4.2)
+  httpclient
+  iiif_url
   jbuilder (~> 2.5)
   jquery-rails
   listen (~> 3.0.5)
@@ -175,4 +179,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.11.2
+   1.12.5

@@ -17,5 +17,7 @@ module IiifSearchInside
         'Access-Control-Request-Method' => 'GET, PATCH, PUT, POST, OPTIONS, DELETE',
         'Access-Control-Allow-Headers:' => 'Origin, X-Requested-With, Content-Type, Accept'
     }
+
+    config.iiifsi = config_for(:iiifsi)
   end
 end
