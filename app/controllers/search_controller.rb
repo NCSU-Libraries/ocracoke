@@ -16,8 +16,9 @@ class SearchController < ApplicationController
     end
 
     @pages_json = {}
+    first_two_chars = params[:id][0,2]
     @docs.map do |doc|
-      json_file = File.join "/access-images/ocr/te/", doc['id'], doc['id'] + ".json"
+      json_file = File.join Rails.configuration.iiifsi['ocr_directory'], first_two_chars, doc['id'], doc['id'] + ".json"
       json = File.read json_file
       page_json = JSON.parse(json)
       @pages_json[doc['id']] = page_json

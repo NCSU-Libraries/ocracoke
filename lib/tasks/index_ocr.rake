@@ -1,7 +1,9 @@
 namespace :iiifsi do
   task :index_ocr => :environment do
     solr = RSolr.connect url: 'http://localhost:8983/solr/iiifsi'
-    Dir.glob("/access-images/ocr/te/*_*").each do |directory_path|
+    # We're only going to index the individual pages and not whole documents
+    glob = File.join Rails.configuration.iiifsi['ocr_directory'], "/*/*_*"
+    Dir.glob(glob).each do |directory_path|
       puts directory_path
       id = directory_path.split('/').last
       filename = id.split('_').first

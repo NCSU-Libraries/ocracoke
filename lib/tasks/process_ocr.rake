@@ -19,8 +19,7 @@ namespace :iiifsi do
       exit
     end
 
-    # set up some paths
-    @ocr_directory = Rails.configuration.iiifsi['ocr_directory']
+    # set up some variables
     @http_client = HTTPClient.new
     @temp_directory = File.join Dir.tmpdir, 'process_ocr'
     unless File.exist? @temp_directory
@@ -55,7 +54,7 @@ namespace :iiifsi do
     # location for the temporary processing.
     def directory_for_first_two(identifier)
       first_two_of_identifier = identifier.slice(0, 2)
-      File.join @ocr_directory, first_two_of_identifier
+      File.join Rails.configuration.iiifsi['ocr_directory'], first_two_of_identifier
     end
     def directory_for_identifier(identifier)
       File.join directory_for_first_two(identifier), identifier
