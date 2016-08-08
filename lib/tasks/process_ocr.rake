@@ -44,42 +44,6 @@ namespace :iiifsi do
       JSON.parse json
     end
 
-    # Based on a identifier determine if all the OCR files already exist
-    def ocr_already_exists?(identifier)
-      File.size?(final_txt_filepath(identifier)) && File.size?(final_hocr_filepath(identifier))
-      # FIXME: && File.size?(final_pdf_filepath(identifier))
-    end
-
-    # Final file paths where files will be stored. This is not the same as the
-    # location for the temporary processing.
-    def directory_for_first_two(identifier)
-      first_two_of_identifier = identifier.slice(0, 2)
-      File.join Rails.configuration.iiifsi['ocr_directory'], first_two_of_identifier
-    end
-    def directory_for_identifier(identifier)
-      File.join directory_for_first_two(identifier), identifier
-    end
-    def final_output_base_filepath(identifier)
-      File.join directory_for_identifier(identifier), identifier
-    end
-    def final_txt_filepath(identifier)
-      final_output_base_filepath(identifier) + '.txt'
-    end
-    def final_hocr_filepath(identifier)
-      final_output_base_filepath(identifier) + '.hocr'
-    end
-    def final_pdf_filepath(identifier)
-      final_output_base_filepath(identifier) + '.pdf'
-    end
-    def final_json_file_filepath(identifier)
-      final_output_base_filepath(identifier) + '.json'
-    end
-
-    # Temporary filepaths
-    def temporary_filepath(identifier, extension)
-      File.join @temp_directory, identifier + extension
-    end
-
     def parse_hocr_title(title)
       parts = title.split(';').map(&:strip)
       info = {}
@@ -95,98 +59,17 @@ namespace :iiifsi do
       info
     end
 
-    def create_word_boundary_json(identifier)
-      # final_json_file_filepath(identifier)
-      doc = File.open(final_hocr_filepath(identifier)) { |f| Nokogiri::HTML(f) }
-      json = {}
-      doc.css('span.ocrx_word').each do |span|
-        text = span.text
-        # Filter out non-word characters
-        word_match = text.match /\w+/
-        next if word_match.nil?
-        word = word_match[0]
-        next if word.length < 3
-        json[word] ||= []
-        title = span['title']
-        info = parse_hocr_title(title)
-        # FIXME: is it possible here to turn the bounding box numbers into integers?
-        json[word] << info
-      end
-      File.open(final_json_file_filepath(identifier), 'w') do |fh|
-        fh.puts json.to_json
-      end
-    end
-
     # Given a doc iterate over each of the jp2s and process OCR for them
     def process_ocr_for_each_page(doc)
       doc['jp2_filenames_sms'].each do |identifier|
         puts identifier
-
-        # TODO: allow turning this feature off via CLI
-        if ocr_already_exists?(identifier)
+        ocr_creator = OcrCreator.new(identifier: identifier, temp_directory: @temp_directory)
+        if ocr_creator.ocr_already_exists?
           puts "OCR already exists. Skipping #{identifier}"
           next
-        end
-
-        # create tempfile for image
-        request_file_format = 'jpg'
-        tmp_download_image = Tempfile.new([identifier, ".#{request_file_format}"])
-        tmp_download_image.binmode
-        # IIIF URL
-        url = IiifUrl.from_params identifier: identifier, format: request_file_format
-        # get image with httpclient
-        response = @http_client.get url
-        # write image to tempfile
-        tmp_download_image.write response.body
-
-        # create outputs (txt, hOCR, PDF) with tesseract.
-        # Look under /usr/share/tesseract/tessdata/configs/ to see hocr and pdf values.
-        # Do not create the PDF here. Instead just take the hOCR output and
-        # use a lower resolution (more compressed) version of the JPG image of the same
-        # dimensions to combine the hOCR with the JPG into a PDF of reasonable size.
-        `tesseract #{tmp_download_image.path} #{identifier} -l eng hocr`
-
-        # create directory to put final outputs
-        tesseract_output_directory = directory_for_identifier(identifier)
-        FileUtils.mkdir_p tesseract_output_directory
-
-        # move the txt from tesseract to final location
-        FileUtils.mv temporary_filepath(identifier, '.txt'), final_txt_filepath(identifier)
-
-        # Create a downsampled smaller version of the JPG
-        `convert -density 150 -quality 20 #{tmp_download_image.path} #{temporary_filepath(identifier, '.jpg')}`
-
-        # create the PDF with hocr-pdf
-        # FIXME: sometimes hocr-pdf fails so no PDF gets created.
-        begin
-          `hocr-pdf #{@temp_directory} > #{temporary_filepath(identifier, '.pdf')}`
-        rescue
-        end
-
-        # move the hOCR to the final location
-        FileUtils.mv temporary_filepath(identifier, '.hocr'), final_hocr_filepath(identifier)
-
-        # move the PDF to final location if it exists
-        if File.exist?(temporary_filepath(identifier, '.pdf')) && File.size?(temporary_filepath(identifier, '.pdf'))
-          FileUtils.mv temporary_filepath(identifier, '.pdf'), final_pdf_filepath(identifier)
-        end
-
-        # remove the downsampled JPG
-        FileUtils.rm temporary_filepath(identifier, '.jpg')
-
-        # Do a check that the files were properly created
-        if ocr_already_exists?(identifier)
-          # extract words and boundaries from hOCR into a JSON file
-          create_word_boundary_json(identifier)
-          # Set permissions
-          FileUtils.chmod_R('ug=rwX,o=rX', directory_for_first_two(identifier))
         else
-          # remove them if they don't exist
-          FileUtils.rm_rf directory_for_identifier(identifier)
+          ocr_creator.process
         end
-
-        # remove the temporary file
-        tmp_download_image.unlink
       end
     end
 
@@ -250,7 +133,7 @@ namespace :iiifsi do
       response['response']['docs'].each do |doc|
         # A doc is a resource and can have multiple pages
         process_ocr_for_each_page(doc)
-        concatenate_ocr_for_resource(doc)
+        #FIXME: concatenate_ocr_for_resource(doc)
       end
     end
 

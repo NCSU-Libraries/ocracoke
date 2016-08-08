@@ -26,7 +26,10 @@ bin/rails s -b 0.0.0.0
 
 On the host visit Rails: <http://localhost:8090>
 
-
+Get the OCR out of the guest machine:
+```
+cp -R /access-images/ocr /vagrant/tmp/.
+```
 
 ## Solr
 
