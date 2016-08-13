@@ -16,7 +16,7 @@
     - role: ocr
     - role: rvm_io.rvm1-ruby
       rvm1_rubies:
-        - ruby-2.2.4
+        - ruby-2.3.0
     - role: rvm-setup
       users:
         - vagrant
