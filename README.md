@@ -46,7 +46,7 @@ Now that you have indexed the pages of your resources you can search inside them
 
 ## Solr
 
-To update the core's config you can run this from the host:
+To update the Solr core's configuration you can run this from the host:
 
 ```sh
 curl "http://localhost:8984/solr/admin/cores?action=RELOAD&core=iiifsi"
