@@ -26,9 +26,9 @@ You should see the "Yay! You're on Rails!" page.
 
 ### Create Source File
 
-First, we need to create a file which includes the identifiers for resources and images. You can see an example of how this is created for NCSU Libraries with the `NcsuFileCreator` class. This uses an API on our public site to gather the needed information. You can give it a try with: `bin/rake iiifsi:create_ncsu`. This will place a JSON file in `tmp/ncsu_file.json`.
+First, we need to create a file which includes the identifiers for resources and images. You can see an example of how this is created for NCSU Libraries with the `NcsuFileCreator` class. This uses an API on our public site to gather the needed information. You can give it a try with: `bin/rake iiifsi:create_ncsu`. This will place a JSON file in `tmp/ncsu_source_file.json`.
 
-If you are using the NCSU Libraries task to create the source file you can adjust the path of the outfile and give the URL to use for the query. In this example all of the Technician newspapers from the 1970s that match the query "april 1" are output.
+If you are using the NCSU Libraries task to create the source file you can adjust the path of the outfile and give the URL to use for the query. In this example all of the Technician newspapers from the 1970s that match the query "april 1" are output. This is just a matter of taking a URL from the public site and requesting the JSON version of the query.
 
 ```sh
 bin/rake iiifsi:create_ncsu["./tmp/nsf.json","http://d.lib.ncsu.edu/collections/catalog.json?f[format][]=Text&f[ispartof_facet][]=Technician&f[resource_decade_facet][]=1970s&q=april+1"]
