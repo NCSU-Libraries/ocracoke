@@ -1,6 +1,6 @@
 # IIIF Search Inside
 
-Application to create, index, and search OCR and provide results in [IIIF Content Search API](http://iiif.io/api/search/) format.
+Application to create, index, and search page text and provide results in [IIIF Content Search API](http://iiif.io/api/search/) format. Tasks are provided to use a IIIF Image server to OCR and index page text.
 
 ## Quick start
 
@@ -72,10 +72,89 @@ You can now include the search endpoint in a [IIIF Presentation API](http://iiif
 
 Note that currently the autocomplete endpoint just returns a 200 OK status. This is to work around this issue with universalviewer: <https://github.com/UniversalViewer/universalviewer/issues/348>
 
+## Page Text Directory Structure
+
+The `ocr_directory` can be set in `config/iiifsi.yml`. Under the OCR directory are directories for the first two characters of your resource and image identifiers. For instance if one or more identifiers begins with "technician-" then there will be a directory named "te" under the OCR directory. Within will be directories named after each resource and image identifier. In order to use the OCR index script you will need to have within each directory for an image at minimum a text file with the full text of the page and a JSON word boundaries file. If you are not using the provided scripts for indexing, the minimum will be the JSON word boundaries file if you want hits to be highlighted. If creating OCR using the scripts given here you will have already created hOCR with tesseract and a PDF with hocr-tools.
+
+Here's an example directory structure a single resource with a couple of the pages from the resource:
+
+```
+.
+└── te
+    ├── technician-v60n1-1980-04-01
+    │   ├── technician-v60n1-1980-04-01.pdf
+    │   └── technician-v60n1-1980-04-01.txt
+    ├── technician-v60n1-1980-04-01_0001
+    │   ├── technician-v60n1-1980-04-01_0001.hocr
+    │   ├── technician-v60n1-1980-04-01_0001.json
+    │   ├── technician-v60n1-1980-04-01_0001.pdf
+    │   └── technician-v60n1-1980-04-01_0001.txt
+    └── technician-v60n1-1980-04-01_0002
+        ├── technician-v60n1-1980-04-01_0002.hocr
+        ├── technician-v60n1-1980-04-01_0002.json
+        ├── technician-v60n1-1980-04-01_0002.pdf
+        └── technician-v60n1-1980-04-01_0002.txt
+
+```
+
+## JSON Word Boundaries File
+
+The JSON word boundaries files allow for hit highlighting. If you have this file present then each canvas in "resources" in the content search response will have a "xywh" hash fragment. Each word boundary file for a page takes the form of a single object where the keys are words and the value is an array of word boundaries.
+
+Here's a short example where the words "Wednesday", "April", and "student" could be highlighted if they matched the user's query. If the word "student" matches it would be highlighted on the page four times.
+
+```json
+{
+  "Wednesday":[{"x0":"149","y0":"734","x1":"431","y1":"791","c":"73"}],
+  "April":[{"x0":"450","y0":"733","x1":"555","y1":"781","c":"83"}],
+  "student":[
+    {"x0":"70","y0":"1442","x1":"808","y1":"1685","c":"88"},
+    {"x0":"1578","y0":"4498","x1":"1726","y1":"4531","c":"90"},
+    {"x0":"2585","y0":"4126","x1":"2732","y1":"4158","c":"89"},
+    {"x0":"4295","y0":"2880","x1":"4444","y1":"2913","c":"86"}]
+}
+```
+
+The coordinates in the file are the bbox from the hOCR. This data is extracted from the hOCR output from `.ocrx_word` elements during OCR creation, but if you have this information you can create the file yourself. The coordinates are the top-left (x0, y0) and bottom-right (x1, y1) of the bounding box for the word. The height (h) and width (w) are calculated from these points. The "c" value is the confidence level from the OCR engine and currently not used at this point.
+
+If you do not have the JSON word boundaries files then the media fragment will be "xywh=0,0,0,0". This [allows universalviewer](https://github.com/UniversalViewer/universalviewer/issues/202#issuecomment-238036980) to work to get the user to the correct page without showing any highlighting on the matching page.
+
+## Indexing Page Text
+
+In some cases you may already have OCR or the text has been transcribed. In these cases you could just index the text directly into Solr. The fields you will want to include in the Solr document you add for each page image are:
+
+- "id" for the identifier for the page image. This is a single-valued field.
+- "resource" for the identifier for the resource which may have multiple images associated with it. The "resource" field allows for filtering Solr queries for search inside functionality rather than searching across all documents in the index. This is a single-valued field.
+- "txt" for the full text of the page either from OCR or transcription. This is a single-valued field.
+
+## Autocomplete
+
+Note that currently the autocomplete endpoint just returns a 200 OK status. This is to work around this issue with universalviewer: <https://github.com/UniversalViewer/universalviewer/issues/348>
+
 ## Solr
+
+Sometimes when Vagrant starts up it seems the synced file system is not present when Solr start, so it is necessary to restart solr on the guest to pick up the configs:
+
+```sh
+sudo service solr-iiifsi restart
+```
 
 To update the Solr core's configuration you can run this from the host:
 
 ```sh
 curl "http://localhost:8984/solr/admin/cores?action=RELOAD&core=iiifsi"
 ```
+
+## TODO
+
+- #TODO:0 Create rake task to create JSON word boundary files from hOCR and remove this step from OCR creation.
+- #TODO:10 Allow the JSON word boundary file to include x, y, w, h values instead of the hOCR x0, y0, x1, y1 values and work either way.
+- #TODO:20 Create API for sending OCR and indexing jobs to the application and have a callback when a particular job is completed.
+
+## Authors
+
+- Jason Ronallo
+
+## License
+
+See MIT-LICENSE
