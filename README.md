@@ -48,7 +48,7 @@ Now that you have created OCR you can index the OCR. Combined OCR will not be in
 
 ### Search a Resource
 
-Now that you have indexed the pages of your resources you can search inside them and get a [IIIF Content Search API](http://iiif.io/api/search/) response. If you are using the NCSU Libraries example you can do the following search from the host: <http://localhost:8090/search/technician-v60n1-1980-04-01?q=student>. The search URL follows the pattern `/search/RESOURCE_IDENTIFIER?q=QUERY`.
+Now that you have indexed the pages of your resources you can search inside them and get a [IIIF Content Search API](http://iiif.io/api/search/) response. If you are using the NCSU Libraries example you can do the following search from the host: <http://localhost:8090/search/technician-v60n1-1980-04-01?q=student>. The search URL follows the pattern `/search/RESOURCE_IDENTIFIER?q=QUERY` and always returns JSON.
 
 ### Use Search Endpoint in a IIIF Presentation Manifest
 
