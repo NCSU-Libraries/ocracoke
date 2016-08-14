@@ -22,3 +22,6 @@
 
 # vagrant
 .vagrant
+
+# imdone-atom
+.imdone
