@@ -28,7 +28,13 @@ You should see the "Yay! You're on Rails!" page.
 
 First, we need to create a file which includes the identifiers for resources and images. You can see an example of how this is created for NCSU Libraries with the `NcsuFileCreator` class. This uses an API on our public site to gather the needed information. You can give it a try with: `bin/rake iiifsi:create_ncsu`. This will place a JSON file in `tmp/ncsu_file.json`.
 
-Source files should be in the format of an array of objects. Each object includes two keys `resource` and `images`. The value of `resource` should be a unique identifier for the resource. The value of `images` are the IIIF image identifiers which will be used to retrieve the images from an IIIF Image API server for processing OCR for each image. The `resource` value will be used as the name of the directory to place the concatenated text and PDF from all of the page `images` of the resource. The concatenated PDF can be used to allow downloading a searchable PDF.
+If you are using the NCSU Libraries task to create the source file you can adjust the path of the outfile and give the URL to use for the query. In this example all of the Technician newspapers from the 1970s that match the query "april 1" are output.
+
+```sh
+bin/rake iiifsi:create_ncsu["./tmp/nsf.json","http://d.lib.ncsu.edu/collections/catalog.json?f[format][]=Text&f[ispartof_facet][]=Technician&f[resource_decade_facet][]=1970s&q=april+1"]
+```
+
+Source files should be in the format of an array of objects. You can see a simple example in `examples/short_ncsu_source_file.json`. Each object includes two keys `resource` and `images`. The value of `resource` should be a unique identifier for the resource. The value of `images` is an array of the IIIF image identifiers which will be used to retrieve the images from an IIIF Image API server for processing OCR for each image. The `resource` value will be used as the name of the directory to place the concatenated text and PDF from all of the page `images` of the resource. The concatenated PDF can be used to allow downloading a searchable PDF.
 
 ### Create OCR
 
