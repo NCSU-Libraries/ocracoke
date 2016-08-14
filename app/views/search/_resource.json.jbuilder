@@ -25,4 +25,7 @@ else
   "#{x},#{y},#{w},#{h}"
 end
 
+# FIXME: How to make this so it is possible to have different canvas URLs to
+#        match each institution's own URLs to canvases as found in their
+#        Presentation manifests?
 json.on manifest_image_api_id(doc[:id]) + "/canvas#xywh=#{xywh}"
