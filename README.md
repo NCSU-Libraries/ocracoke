@@ -50,6 +50,28 @@ Now that you have created OCR you can index the OCR. Combined OCR will not be in
 
 Now that you have indexed the pages of your resources you can search inside them and get a [IIIF Content Search API](http://iiif.io/api/search/) response. If you are using the NCSU Libraries example you can do the following search from the host: <http://localhost:8090/search/technician-v60n1-1980-04-01?q=student>. The search URL follows the pattern `/search/RESOURCE_IDENTIFIER?q=QUERY`.
 
+### Use Search Endpoint in a IIIF Presentation Manifest
+
+You can now include the search endpoint in a [IIIF Presentation API](http://iiif.io/api/presentation) manifest. If you are working in development you can include it as a service in your manifest like this:
+
+```json
+"service": [
+  {
+    "@context": "http://iiif.io/api/search/0/context.json",
+    "@id": "http://localhost:8090/search/technician-v60n1-1980-04-01",
+    "profile": "http://iiif.io/api/search/0/search",
+    "label": "Search within this thing",
+    "service": {
+      "@id": "http://localhost:8090/autocomplete/technician-v60n1-1980-04-01",
+      "profile": "http://iiif.io/api/search/0/autocomplete",
+      "label": "Get suggested words (Currently a fake endpoint)"
+    }
+  }
+]
+```
+
+Note that currently the autocomplete endpoint just returns a 200 OK status. This is to work around this issue with universalviewer: <https://github.com/UniversalViewer/universalviewer/issues/348>
+
 ## Solr
 
 To update the Solr core's configuration you can run this from the host:
