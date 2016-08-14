@@ -4,7 +4,7 @@ class SearchController < ApplicationController
     solr = RSolr.connect url: 'http://localhost:8983/solr/iiifsi'
     solr_params = {
       q: params[:q],
-      fq: "filename:#{params[:id]}"
+      fq: "resource:#{params[:id]}"
     }
     @response = solr.get '/solr/iiifsi/query', params: solr_params
 

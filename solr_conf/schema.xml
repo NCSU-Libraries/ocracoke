@@ -127,7 +127,7 @@
     <field name="id" stored="true" type="string" multiValued="false" indexed="true"/>
 
     <!-- Added for iiifsi -->
-    <field name="filename" stored="true" type="string" multiValued="false" indexed="true"/>
+    <field name="resource" stored="true" type="string" multiValued="false" indexed="true"/>
     <field name="txt" stored="true" termVectors="true" type="text" multiValued="false" indexed="true"/>
 
     <!-- *** This field is used by Sunspot! *** -->

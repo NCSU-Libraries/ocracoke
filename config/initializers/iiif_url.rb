@@ -1,1 +1,1 @@
-IiifUrl.set_base_url("https://iiif.lib.ncsu.edu/iiif")
+IiifUrl.set_base_url(Rails.configuration.iiifsi['iiif_base_url'])

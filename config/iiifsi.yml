@@ -1,2 +1,4 @@
 development:
   ocr_directory: /access-images/ocr/
+  iiif_base_url: https://iiif.lib.ncsu.edu/iiif
+  solr_url: http://localhost:8983/solr/iiifsi

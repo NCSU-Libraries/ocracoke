@@ -17,7 +17,7 @@ resource_docs = []
 @docs.each do |doc|
   doc[:hit_number].times do |time|
     snippet = doc[:hits][time]#params[:q]
-    new_doc = {id: doc['id'], filename: doc['filename'], time: time, snippet: snippet}
+    new_doc = {id: doc['id'], resource: doc['resource'], time: time, snippet: snippet}
     resource_docs << new_doc
   end
 end

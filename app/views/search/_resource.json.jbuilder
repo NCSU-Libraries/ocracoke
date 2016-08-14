@@ -1,5 +1,5 @@
 
-json.set! "@id", annotation_url(doc[:id], doc[:filename], doc[:time])
+json.set! "@id", annotation_url(doc[:id], doc[:resource], doc[:time])
 json.set! '@type', 'oa:Annotation'
 json.motivation 'sc:painting'
 
@@ -13,7 +13,7 @@ json.resource do
 end
 
 page_word_list = @pages_json[doc[:id]]
-xywh = if !@pages_json[doc[:id]] || page_word_list[word].nil? 
+xywh = if !@pages_json[doc[:id]] || page_word_list[word].nil?
   "0,0,0,0"
 else
   word_bounds = page_word_list[word].shift

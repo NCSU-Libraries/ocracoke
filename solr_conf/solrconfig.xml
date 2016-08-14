@@ -61,6 +61,10 @@
        solr.RAMDirectoryFactory is memory based, not
        persistent, and doesn't work with replication.
     -->
+
+  <!-- Added for iiifsi  -->
+  <schemaFactory class="ClassicIndexSchemaFactory"/>
+
   <directoryFactory name="DirectoryFactory"
                     class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}">
   </directoryFactory>
@@ -449,7 +453,7 @@
        <str name="wt">json</str>
        <str name="mm">1</str>
        <str name="indent">true</str>
-       <str name="fl">id,filename</str>
+       <str name="fl">id,resource</str>
        <str name="hl">true</str>
        <str name="hl.fl">txt</str>
        <str name="hl.snippets">20</str>
@@ -461,6 +465,30 @@
         txt
       </str>
      </lst>
+  </requestHandler>
+
+  <searchComponent name="suggest" class="solr.SuggestComponent">
+    <lst name="suggester">
+      <str name="name">suggester</str>
+      <!-- <str name="lookupImpl">FuzzyLookupFactory</str>
+      <str name="dictionaryImpl">DocumentDictionaryFactory</str> -->
+      <str name="field">txt</str>
+      <str name="suggestAnalyzerFieldType">string</str>
+      <str name="buildOnCommit">true</str>
+      <str name="buildOnOptimize">true</str>
+      <str name="buildOnStartup">true</str>
+    </lst>
+  </searchComponent>
+
+  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy">
+    <lst name="defaults">
+      <str name="suggest">true</str>
+      <str name="suggest.count">10</str>
+      <str name="suggest.dictionary">suggester</str>
+    </lst>
+    <arr name="components">
+      <str>suggest</str>
+    </arr>
   </requestHandler>
 
   <initParams path="/update/**,/query,/select,/tvrh,/elevate,/spell">

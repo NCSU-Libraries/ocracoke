@@ -1,21 +1,28 @@
 namespace :iiifsi do
-  task :index_ocr => :environment do
-    solr = RSolr.connect url: 'http://localhost:8983/solr/iiifsi'
-    # We're only going to index the individual pages and not whole documents
-    glob = File.join Rails.configuration.iiifsi['ocr_directory'], "/*/*_*"
-    Dir.glob(glob).each do |directory_path|
-      id = directory_path.split('/').last
-      puts id
-      filename = id.split('_').first
-      text_file = File.join directory_path, id + ".txt"
-      text = File.read text_file
-      page = {
-        id: id,
-        filename: filename,
-        txt: text
-      }
-      solr.add page
+  desc "Index all the OCR into Solr"
+  task :index_ocr, [:resources_file] => :environment do |t, args|
+    include DirectoryFileHelpers
+
+    solr = RSolr.connect url: Rails.configuration.iiifsi['solr_url']
+
+    resources_file = args[:resources_file]
+
+    resources_file_json = File.read resources_file
+    resource_documents = JSON.parse resources_file_json
+    # iterate over each resource
+    resource_documents.each do |resource_document|
+      resource_document['images'].each do |image_identifier|
+        text = File.read final_txt_filepath(image_identifier)
+        page = {
+          id: image_identifier,
+          resource: resource_document['resource'],
+          txt: text
+        }
+        add = solr.add page
+        puts "add #{image_identifier}: #{add}"
+      end
     end
-    solr.commit
+    commit = solr.commit
+    puts "commit: #{commit}"
   end
 end
