@@ -15,6 +15,7 @@ namespace :iiifsi do
         text = File.read final_txt_filepath(image_identifier)
         # FIXME: For some reason the context field cannot have any dashes in it.
         # http://lucene.472066.n3.nabble.com/Suggester-Issue-td4285670.html
+        # TODO: Could resource_context_field be multiValued so that we could either make suggestions based on a resource or based on a page image?
         resource_context_field = resource_document['resource'].gsub('-','_')
         # FIXME: Does suggest_txt need to match JSON word boundaries file?
         suggest_txt = text.split.map{|word| word.gsub(/[^a-zA-Z]/, "").downcase }
