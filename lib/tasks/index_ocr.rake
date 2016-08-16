@@ -13,13 +13,23 @@ namespace :iiifsi do
     resource_documents.each do |resource_document|
       resource_document['images'].each do |image_identifier|
         text = File.read final_txt_filepath(image_identifier)
+        # FIXME: For some reason the context field cannot have any dashes in it.
+        # http://lucene.472066.n3.nabble.com/Suggester-Issue-td4285670.html
+        resource_context_field = resource_document['resource'].gsub('-','_')
+        # FIXME: Does suggest_txt need to match JSON word boundaries file?
+        suggest_txt = text.split.map{|word| word.gsub(/[^a-zA-Z]/, "").downcase }
+        suggest_txt = suggest_txt.uniq
         page = {
           id: image_identifier,
           resource: resource_document['resource'],
-          txt: text
+          resource_context_field: resource_context_field,
+          txt: text,
+          suggest_txt: suggest_txt
         }
         add = solr.add page
         puts "add #{image_identifier}: #{add}"
+        # puts page
+        # puts
       end
     end
     commit = solr.commit

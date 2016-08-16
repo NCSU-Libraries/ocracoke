@@ -112,7 +112,7 @@
          http://wiki.apache.org/lucene-java/AvailableLockFactories
     -->
     <lockType>${solr.lock.type:native}</lockType>
-
+    <writeLockTimeout>10000</writeLockTimeout>
     <!-- Lucene Infostream
 
          To aid in advanced debugging, Lucene provides an "InfoStream"
@@ -467,13 +467,47 @@
      </lst>
   </requestHandler>
 
+  <searchComponent name="autocomplete" class="solr.SpellCheckComponent">
+    <lst name="spellchecker">
+        <str name="name">autocomplete</str>
+        <str name="classname">org.apache.solr.spelling.suggest.Suggester</str>
+        <str name="lookupImpl">org.apache.solr.spelling.suggest.fst.FSTLookup</str>
+        <str name="field">autocomplete</str>
+        <str name="buildOnCommit">true</str>
+    </lst>
+</searchComponent>
+<requestHandler class="org.apache.solr.handler.component.SearchHandler" name="/autocomplete">
+    <lst name="defaults">
+      <str name="defType">dismax</str>
+      <str name="echoParams">ALL</str>
+      <str name="fl">id,resource</str>
+
+        <str name="spellcheck">true</str>
+        <str name="spellcheck.dictionary">autocomplete</str>
+        <str name="spellcheck.onlyMorePopular">true</str>
+        <str name="spellcheck.count">10</str>
+        <str name="spellcheck.collate">true</str>
+    </lst>
+    <arr name="components">
+        <str>autocomplete</str>
+    </arr>
+</requestHandler>
+
+<!-- This suggest component is not used. It would only be good to retrieve ids or resource identifiers in our case. -->
   <searchComponent name="suggest" class="solr.SuggestComponent">
     <lst name="suggester">
       <str name="name">suggester</str>
-      <!-- <str name="lookupImpl">FuzzyLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str> -->
-      <str name="field">txt</str>
-      <str name="suggestAnalyzerFieldType">string</str>
+      <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+      <str name="indexPath">suggester_infixdata_dir</str>
+      <!-- minPrefixChars: default is 4 -->
+      <!-- <str name="minPrefixChars">2</str> -->
+
+      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+      <str name="field">suggest_txt</str>
+      <!-- <str name="weightField">weightField_fs</str> -->
+      <str name="contextField">resource_context_field</str>
+      <str name="suggestAnalyzerFieldType">suggest</str>
+      <!-- FIXME: This should not be done on startup or commit! -->
       <str name="buildOnCommit">true</str>
       <str name="buildOnOptimize">true</str>
       <str name="buildOnStartup">true</str>
@@ -485,6 +519,7 @@
       <str name="suggest">true</str>
       <str name="suggest.count">10</str>
       <str name="suggest.dictionary">suggester</str>
+      <str name="wt">json</str>
     </lst>
     <arr name="components">
       <str>suggest</str>

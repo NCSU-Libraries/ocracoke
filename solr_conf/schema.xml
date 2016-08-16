@@ -96,6 +96,27 @@
     </fieldType>
     <!-- A specialized field for geospatial search. If indexed, this fieldType must not be multivalued. -->
     <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
+
+    <!-- <fieldType name="suggestTypeLc" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="[^a-zA-Z0-9]" replacement=" " />
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType> -->
+
+    <!-- AUTO-COMPLETE START -->
+    <fieldType name="suggest" class="solr.TextField" positionIncrementGap="100">
+       <analyzer>
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="[^a-zA-Z0-9]" replacement=" " />
+  		  <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+  		  <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"/>
+  		  <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+  		 </analyzer>
+    </fieldType>
+    <!-- AUTO-COMPLETE END -->
+
   </types>
   <fields>
     <!-- Valid attributes for fields:
@@ -128,7 +149,15 @@
 
     <!-- Added for iiifsi -->
     <field name="resource" stored="true" type="string" multiValued="false" indexed="true"/>
+    <field name="resource_context_field" type="string" indexed="true" stored="true" multiValued="false"/>
+    <!-- <copyField source="resource" dest="resource_facet" /> -->
+
     <field name="txt" stored="true" termVectors="true" type="text" multiValued="false" indexed="true"/>
+    <field name="autocomplete" type="textSpell" indexed="true" stored="false" multiValued="false"/>
+    <copyField source="txt"  dest="autocomplete" />
+
+    <field name="suggest_txt" type="suggest" indexed="true" stored="true" multiValued="true"/>
+    <!-- <copyField source="txt" dest="suggest_txt" /> -->
 
     <!-- *** This field is used by Sunspot! *** -->
     <field name="type" stored="false" type="string" multiValued="true" indexed="true"/>
