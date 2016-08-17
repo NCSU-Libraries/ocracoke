@@ -6,7 +6,7 @@ class SearchController < ApplicationController
       q: params[:q],
       fq: "resource:#{params[:id]}"
     }
-    @response = solr.get '/solr/iiifsi/query', params: solr_params
+    @response = solr.get '/solr/iiifsi/search', params: solr_params
 
     @docs = @response["response"]["docs"].map do |doc|
       doc_hits = @response['highlighting'][doc['id']]['txt']

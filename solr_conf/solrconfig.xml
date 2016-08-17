@@ -77,7 +77,7 @@
   </requestHandler>
 
   <!-- /query is used for search inside -->
-  <requestHandler name="/query" class="solr.SearchHandler">
+  <requestHandler name="/search" class="solr.SearchHandler">
      <lst name="defaults">
        <str name="defType">dismax</str>
        <!-- <str name="echoParams">ALL</str> -->
