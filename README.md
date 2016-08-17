@@ -64,7 +64,7 @@ You can now include the search endpoint in a [IIIF Presentation API](http://iiif
     "service": {
       "@id": "http://localhost:8090/suggest/technician-v60n1-1980-04-01",
       "profile": "http://iiif.io/api/search/0/autocomplete",
-      "label": "Get suggested words (Currently a fake endpoint)"
+      "label": "Get suggested words"
     }
   }
 ]
