@@ -5,6 +5,7 @@ namespace :iiifsi do
 
     solr = RSolr.connect url: Rails.configuration.iiifsi['solr_url']
 
+    # TODO: Allow for skipping over errors instead of failing on them
     begin
       resources_file = args[:resources_file]
 
