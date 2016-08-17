@@ -10,8 +10,12 @@ class SearchController < ApplicationController
 
     @docs = @response["response"]["docs"].map do |doc|
       doc_hits = @response['highlighting'][doc['id']]['txt']
-      doc[:hit_number] = doc_hits.length
-      doc[:hits] = doc_hits
+      # Each "hit" here might have more than one match emphasized, so we pull those out now.
+      hits = doc_hits.map do |hit|
+        hit.scan(/<em>(.*?)<\/em>/).flatten
+      end.flatten
+      doc[:hit_number] = hits.length
+      doc[:hits] = hits
       doc
     end
 
@@ -23,6 +27,12 @@ class SearchController < ApplicationController
       page_json = JSON.parse(json)
       @pages_json[doc['id']] = page_json
     end
+
+    # We keep track of how many times a particular word has had a hit so that we
+    # pick the correct @pages_json word boundary. This compensates for how there
+    # could be more than one hit in a snippet.
+    @hits_used = {}
+    
     request.format = :json
     respond_to :json
   end

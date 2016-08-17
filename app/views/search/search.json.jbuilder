@@ -16,8 +16,8 @@ json.hits @docs, partial: 'search/hit', as: :doc
 resource_docs = []
 @docs.each do |doc|
   doc[:hit_number].times do |time|
-    snippet = doc[:hits][time]#params[:q]
-    new_doc = {id: doc['id'], resource: doc['resource'], time: time, snippet: snippet}
+    word = doc[:hits][time]
+    new_doc = {id: doc['id'], resource: doc['resource'], time: time, word: word}
     resource_docs << new_doc
   end
 end
