@@ -7,6 +7,7 @@ class OcrCreator
     @temp_directory = temp_directory
     Dir.chdir temp_directory
     @http_client = HTTPClient.new
+    @http_client.receive_timeout = 240
   end
 
   def process
