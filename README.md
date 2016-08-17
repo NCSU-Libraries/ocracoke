@@ -62,15 +62,13 @@ You can now include the search endpoint in a [IIIF Presentation API](http://iiif
     "profile": "http://iiif.io/api/search/0/search",
     "label": "Search within this thing",
     "service": {
-      "@id": "http://localhost:8090/autocomplete/technician-v60n1-1980-04-01",
+      "@id": "http://localhost:8090/suggest/technician-v60n1-1980-04-01",
       "profile": "http://iiif.io/api/search/0/autocomplete",
       "label": "Get suggested words (Currently a fake endpoint)"
     }
   }
 ]
 ```
-
-Note that currently the autocomplete endpoint just returns a 200 OK status. This is to work around this issue with universalviewer: <https://github.com/UniversalViewer/universalviewer/issues/348>
 
 ## Page Text Directory Structure
 
@@ -127,9 +125,9 @@ In some cases you may already have OCR or the text has been transcribed. In thes
 - "resource" for the identifier for the resource which may have multiple images associated with it. The "resource" field allows for filtering Solr queries for search inside functionality rather than searching across all documents in the index. This is a single-valued field.
 - "txt" for the full text of the page either from OCR or transcription. This is a single-valued field.
 
-## Autocomplete
+## Suggester
 
-Note that currently the autocomplete endpoint just returns a 200 OK status. This is to work around this issue with universalviewer: <https://github.com/UniversalViewer/universalviewer/issues/348>
+A simple suggester is provided. It currently has some limitations where it can only suggest a single word and not a phrase. This example request would return suggested terms like "student": <http://localhost:8090/suggest/technician-v60n1-1980-04-01?q=stud>
 
 ## Solr
 
