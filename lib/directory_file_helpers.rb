@@ -30,9 +30,12 @@ module DirectoryFileHelpers
     File.join @temp_directory, id + extension
   end
 
-  # Based on a identifier determine if all the OCR files already exist
+  # Based on a identifier determine if all the OCR files already exist.
+  # We only check if the txt file exists because some page images processed
+  # by tesseract result in no text. In these cases the txt file will exist, but
+  # it will be completely empty.
   def ocr_already_exists?(id)
-    File.size?(final_txt_filepath(id)) &&
+    File.exist?(final_txt_filepath(id)) &&
     File.size?(final_hocr_filepath(id)) &&
     pdf_exists?(id)
   end
