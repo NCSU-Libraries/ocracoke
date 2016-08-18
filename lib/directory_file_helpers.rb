@@ -33,7 +33,12 @@ module DirectoryFileHelpers
   # Based on a identifier determine if all the OCR files already exist
   def ocr_already_exists?(id)
     File.size?(final_txt_filepath(id)) &&
-    File.size?(final_hocr_filepath(id)) #&& File.size?(final_pdf_filepath(id))
+    File.size?(final_hocr_filepath(id)) &&
+    pdf_exists?(id)
+  end
+
+  def pdf_exists?(id)
+    File.size?(final_pdf_filepath(id))
   end
 
 end

@@ -39,10 +39,11 @@ class OcrCreator
     `convert -density 150 -quality 20 #{tmp_download_image.path} #{temporary_filepath(@identifier, '.jpg')}`
 
     # create the PDF with hocr-pdf
-    # FIXME: sometimes hocr-pdf fails so no PDF gets created.
-    begin
-      `hocr-pdf #{@temp_directory} > #{temporary_filepath(@identifier, '.pdf')}`
-    rescue
+    # FIXME: sometimes hocr-pdf fails so no PDF gets created. When hocr-tools is
+    #        fixed remove the rescue convert below
+    result = system("hocr-pdf #{@temp_directory} > #{temporary_filepath(@identifier, '.pdf')}")
+    if !result
+      `convert #{temporary_filepath(@identifier, '.jpg')} #{temporary_filepath(@identifier, '.pdf')}`
     end
 
     # move the hOCR to the final location
@@ -64,7 +65,7 @@ class OcrCreator
       # Set permissions
       FileUtils.chmod_R('ug=rwX,o=rX', directory_for_first_two(@identifier))
     else
-      # remove them if they don't exist
+      # remove the files if full OCR doesn't exist
       FileUtils.rm_rf directory_for_identifier(@identifier)
     end
 
