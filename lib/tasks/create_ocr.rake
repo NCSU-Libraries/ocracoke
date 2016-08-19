@@ -66,6 +66,7 @@ namespace :iiifsi do
       if concatenator.ocr_exists?
         puts "Concatenated OCR already exists for #{resource_document['resource']}"
       else
+        puts "Creating concatenated PDF for #{resource_document['resource']}"
         concatenator.concatenate
       end
       puts
