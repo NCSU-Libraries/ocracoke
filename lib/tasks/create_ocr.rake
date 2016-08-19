@@ -40,6 +40,10 @@ namespace :iiifsi do
     # read in the file of resources
     resources_file_json = File.read resources_file
     resource_documents = JSON.parse resources_file_json
+
+    # sort by resource identifier
+    resource_documents = resource_documents.sort_by{|doc| doc['resource']}
+
     # iterate over each resource
     resource_documents.each do |resource_document|
       # Process OCR for each of the image identifiers
