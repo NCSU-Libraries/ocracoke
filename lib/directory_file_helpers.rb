@@ -44,4 +44,8 @@ module DirectoryFileHelpers
     File.size?(final_pdf_filepath(id))
   end
 
+  def concatenated_ocr_exists?(id)
+    pdf_exists?(id) && File.exist?(final_txt_filepath(id))
+  end
+
 end
