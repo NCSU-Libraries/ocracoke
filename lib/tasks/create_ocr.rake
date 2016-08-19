@@ -62,10 +62,10 @@ namespace :iiifsi do
       #       combined files
       # TODO: skip this step if the resource identifier is the same as
       #       the single image identifier
-      if concatenated_ocr_exists?(resource_document['resource'])
+      concatenator = OcrConcatenator.new(resource_document: resource_document)
+      if concatenator.ocr_exists?(resource_document['resource'])
         puts "Concatenated OCR already exists for #{resource_document['resource']}"
       else
-        concatenator = OcrConcatenator.new(resource_document: resource_document)
         concatenator.concatenate
       end
       puts
