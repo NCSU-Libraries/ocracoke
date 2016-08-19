@@ -11,9 +11,17 @@ namespace :iiifsi do
 
       resources_file_json = File.read resources_file
       resource_documents = JSON.parse resources_file_json
+
+      # sort by resource identifier
+      resource_documents = resource_documents.sort_by{|doc| doc['resource']}
+
       # iterate over each resource
       resource_documents.each do |resource_document|
         resource_document['images'].each do |image_identifier|
+          if !File.exist? final_txt_filepath(image_identifier)
+            puts "File does not exist: #{final_txt_filepath(image_identifier)}"
+            next
+          end
           text = File.read final_txt_filepath(image_identifier)
           # FIXME: For some reason the context field cannot have any dashes in it.
           # http://lucene.472066.n3.nabble.com/Suggester-Issue-td4285670.html
@@ -39,6 +47,7 @@ namespace :iiifsi do
       puts "commit: #{commit}"
     rescue => e
       puts "ERROR!"
+      puts e
       puts e.backtrace
       commit = solr.commit
       puts "commit: #{commit}"
