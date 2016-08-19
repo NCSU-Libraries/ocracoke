@@ -37,8 +37,9 @@ namespace :iiifsi do
       end
       commit = solr.commit
       puts "commit: #{commit}"
-    rescue
+    rescue => e
       puts "ERROR!"
+      puts e.backtrace
       commit = solr.commit
       puts "commit: #{commit}"
       puts "ERROR!"
