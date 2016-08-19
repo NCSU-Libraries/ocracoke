@@ -50,7 +50,7 @@ class OcrConcatenator
   end
 
   def ocr_exists?
-    pdf_exists?(id) && File.exist?(final_txt_filepath(id))
+    pdf_exists?(@resource) && File.exist?(final_txt_filepath(@resource))
   end
 
 end
