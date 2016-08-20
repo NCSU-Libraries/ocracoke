@@ -2,9 +2,9 @@ class OcrConcatenator
 
   include DirectoryFileHelpers
 
-  def initialize(resource_document:)
-    @doc = resource_document
-    @resource = @doc['resource']
+  def initialize(resource, images)
+    @resource = resource
+    @images = images
   end
 
   def concatenate
@@ -23,7 +23,7 @@ class OcrConcatenator
     # Use pdunite to join all the PDFs into one
     pdfunite = "pdfunite "
     pdf_pages = []
-    @doc['images'].each do |identifier|
+    @images.each do |identifier|
       # If the file exists then add it to the pdfunite command
       if File.exist? final_pdf_filepath(identifier)
         pdf_pages << final_pdf_filepath(identifier) + ' '
@@ -32,7 +32,7 @@ class OcrConcatenator
     # Add onto the end the path to the final resource PDF
     pdfunite << "#{pdf_pages.join(' ')} #{final_pdf_filepath(@resource)} "
     # Only try to create the combined PDF if all the pages have a PDF
-    if pdf_pages.length == @doc['images'].length
+    if pdf_pages.length == @images.length
       `#{pdfunite}`
     else
       puts "Some pages do not have a PDF. Skipping creation of combined PDF."
@@ -42,7 +42,7 @@ class OcrConcatenator
   # TODO: Maybe there's a better way to do this without having to read in each text file?
   def concatenate_txt
     File.open final_txt_filepath(@resource), 'w' do |fh|
-      @doc['images'].each do |identifier|
+      @images.each do |identifier|
         fh.puts File.read(final_txt_filepath(identifier))
         fh.puts "\n\n\n"
       end

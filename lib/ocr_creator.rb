@@ -2,10 +2,10 @@ class OcrCreator
 
   include DirectoryFileHelpers
 
-  def initialize(identifier:, temp_directory:)
+  def initialize(identifier)
     @identifier = identifier
-    @temp_directory = temp_directory
-    Dir.chdir temp_directory
+    @temp_directory = File.join(Dir.tmpdir, 'create_ocr')
+    Dir.chdir @temp_directory
     @http_client = HTTPClient.new
     @http_client.receive_timeout = 240
   end
@@ -29,14 +29,14 @@ class OcrCreator
     # dimensions to combine the hOCR with the JPG into a PDF of reasonable size.
     `tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr`
 
+    # Create a downsampled smaller version of the JPG
+    `convert -density 150 -quality 20 #{tmp_download_image.path} #{temporary_filepath(@identifier, '.jpg')}`
+
     # create directory to put final outputs
     FileUtils.mkdir_p directory_for_identifier(@identifier)
 
     # move the txt from tesseract to final location
     FileUtils.mv temporary_filepath(@identifier, '.txt'), final_txt_filepath(@identifier)
-
-    # Create a downsampled smaller version of the JPG
-    `convert -density 150 -quality 20 #{tmp_download_image.path} #{temporary_filepath(@identifier, '.jpg')}`
 
     # create the PDF with hocr-pdf
     # FIXME: sometimes hocr-pdf fails so no PDF gets created. When hocr-tools is

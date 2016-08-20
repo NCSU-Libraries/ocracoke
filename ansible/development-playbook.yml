@@ -20,6 +20,8 @@
     - role: rvm-setup
       users:
         - vagrant
+    - role: geerlingguy.redis
+      redis_appendonly: "yes"
     - role: java
       version: 1.8.0
     - role: solr

@@ -49,7 +49,7 @@ namespace :iiifsi do
       # Process OCR for each of the image identifiers
       resource_document['images'].each do |image_identifier|
         puts image_identifier
-        ocr_creator = OcrCreator.new(identifier: image_identifier, temp_directory: temp_directory)
+        ocr_creator = OcrCreator.new(image_identifier)
         if ocr_creator.ocr_exists?
           puts "OCR already exists for #{image_identifier}"
           next
@@ -62,7 +62,7 @@ namespace :iiifsi do
       #       combined files
       # TODO: skip this step if the resource identifier is the same as
       #       the single image identifier
-      concatenator = OcrConcatenator.new(resource_document: resource_document)
+      concatenator = OcrConcatenator.new(resource_document['resource'], resource_document['images'])
       if concatenator.ocr_exists?
         puts "Concatenated OCR already exists for #{resource_document['resource']}"
       else
@@ -74,6 +74,6 @@ namespace :iiifsi do
 
     # unlock the file
     flock_file.flock(File::LOCK_UN)
-
   end
+
 end

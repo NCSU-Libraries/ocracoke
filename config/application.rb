@@ -31,5 +31,6 @@ module IiifSearchInside
     }
 
     config.iiifsi = config_for(:iiifsi)
+    config.active_job.queue_adapter = :resque
   end
 end
