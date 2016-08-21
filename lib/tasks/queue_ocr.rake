@@ -15,7 +15,6 @@ namespace :iiifsi do
       resource = resource_document['resource']
       images = resource_document['images']
       ResourceOcrJob.perform_later resource, images
-      exit
     end
   end
 end
