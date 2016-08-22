@@ -75,7 +75,7 @@ class OcrCreator
       tmp_download_image.unlink
 
     end
-    puts "OCR Time #{@identifier} #{time} "
+    puts "OCRTime #{@identifier} #{time}"
   end
 
   # TODO: extract out OCR JSON into its own file
