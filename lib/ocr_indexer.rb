@@ -6,8 +6,8 @@ class OcrIndexer
     @image = image
   end
 
-  def index    
-    if !File.exist? final_txt_filepath(@image)
+  def index
+    if File.exist? final_txt_filepath(@image)
       text = File.read final_txt_filepath(@image)
       # FIXME: For some reason the context field cannot have any dashes in it.
       # http://lucene.472066.n3.nabble.com/Suggester-Issue-td4285670.html
