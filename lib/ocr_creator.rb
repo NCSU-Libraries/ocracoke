@@ -32,16 +32,12 @@ class OcrCreator
         # send a head request for the image
         response = @http_client.head url
         cache_file = File.join '/access-images/cache-staging/iiif', @identifier, "/full/full/0/default.jpg"
-        tries = 0
-        puts "cache_file #{cache_file}"
-        loop do
-          puts "File.exist?(#{cache_file}) #{File.exist?(cache_file)}"
-          puts `stat #{cache_file}`
-          break if File.exist?(cache_file) || tries > 60
-          sleep 0.5
-          tries += 1
-        end
+
+        # FIXME: Is this needed? Is it sufficient?
+        # Looping to wait for the file to exist was not working possibly
+        # because of the NFS mount.
         sleep 0.1
+
         puts "Outside until File.exist? #{File.exist?(cache_file)}"
         # TODO: we could do a cp here to retain the file if we wanted to.
         FileUtils.cp cache_file, tmp_download_image.path
