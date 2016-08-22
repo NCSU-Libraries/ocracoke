@@ -42,6 +42,7 @@ class OcrCreator
           break if tries > 60
         end
         sleep 0.1
+        puts "File.exist?(cache_file) #{File.exist?(cache_file)}"
         # TODO: we could do a cp here to retain the file if we wanted to.
         FileUtils.cp cache_file, tmp_download_image.path
       end
