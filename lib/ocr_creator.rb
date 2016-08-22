@@ -18,19 +18,25 @@ class OcrCreator
     # IIIF URL
     url = IiifUrl.from_params identifier: @identifier, format: request_file_format
 
-    if false # FIXME: this is for get rather than head requests
+    # FIXME: this is for get rather than head requests
+    if false
       tmp_download_image.binmode
       # get image via IIIF with httpclient
       response = @http_client.get url
       # write image to tempfile
       tmp_download_image.write response.body
     else
+      # We have access directly to this storage so we can just make a head
+      # request which creates the image but then instead of downloading it via
+      # HTTP we can just move it to where we expect it to be.
       puts "HEAD REQUEST..."
       # send a head request for the image
       response = @http_client.head url
       puts "HEAD REQUEST completed"
       cache_file = File.join '/access-images/cache-staging/iiif', @identifier, "/full/full/0/default.jpg"
-
+      while !File.exist? cache_file
+        sleep 0.1
+      end
       # TODO: we could do a cp here to retain the file if we wanted to.
       FileUtils.mv cache_file, tmp_download_image.path
     end
