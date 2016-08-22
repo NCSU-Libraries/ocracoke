@@ -38,7 +38,7 @@ class OcrCreator
         # because of the NFS mount.
         sleep 0.1
 
-        puts "Outside until File.exist? #{File.exist?(cache_file)}"
+        puts "File.exist? #{File.exist?(cache_file)}"
         # TODO: we could do a cp here to retain the file if we wanted to.
         FileUtils.cp cache_file, tmp_download_image.path
       end
