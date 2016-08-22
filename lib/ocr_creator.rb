@@ -25,10 +25,10 @@ class OcrCreator
       # write image to tempfile
       tmp_download_image.write response.body
     else
-      puts "HEAD REQUEST"
+      puts "HEAD REQUEST..."
       # send a head request for the image
       response = @http_client.head url
-
+      puts "HEAD REQUEST completed"
       cache_file = File.join '/access-images/cache/iiif', @identifier, "/full/full/0/default.jpg"
 
       # TODO: we could do a cp here to retain the file if we wanted to.
