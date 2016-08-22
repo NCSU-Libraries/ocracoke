@@ -75,7 +75,7 @@ namespace :resque do
     ##  make sure log/resque_err, log/resque_stdout are writable.
     ops = {:pgroup => true, :err => [(Rails.root + "log/resque_err").to_s, "a"],
                             :out => [(Rails.root + "log/resque_stdout").to_s, "a"]}
-    env_vars = {"QUEUE" => queue.to_s, 'RAILS_ENV' => Rails.env.to_s}
+    env_vars = {"QUEUE" => queue.to_s, 'RAILS_ENV' => Rails.env.to_s, ''}
 
     pids = []
     count.times do
