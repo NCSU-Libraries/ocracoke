@@ -1,3 +1,5 @@
+# QUEUE=high,ocr,index,concatenate,low
+
 namespace :iiifsi do
   desc "Queue OCR jobs from a file of resource and image identifiers"
   task :queue_ocr, [:resources_file] => :environment do |t, args|
