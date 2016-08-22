@@ -18,30 +18,11 @@ class OcrCreator
       # IIIF URL
       url = IiifUrl.from_params identifier: @identifier, format: request_file_format
 
-      # FIXME: this is for get rather than head requests
-      if false #ENV['PROCESS_FROM_REMOTE_IIIF_SERVER']
-        tmp_download_image.binmode
-        # get image via IIIF with httpclient
-        response = @http_client.get url
-        # write image to tempfile
-        tmp_download_image.write response.body
-      else
-        # We have access directly to this storage so we can just make a head
-        # request which creates the image but then instead of downloading it via
-        # HTTP we can just move it to where we expect it to be.
-        # send a head request for the image
-        response = @http_client.head url
-        cache_file = File.join '/access-images/cache-staging/iiif', @identifier, "/full/full/0/default.jpg"
-
-        # FIXME: Is this needed? Is it sufficient?
-        # Looping to wait for the file to exist was not working possibly
-        # because of the NFS mount.
-        sleep 0.1
-
-        puts "File.exist? #{File.exist?(cache_file)}"
-        # TODO: we could do a cp here to retain the file if we wanted to.
-        FileUtils.cp cache_file, tmp_download_image.path
-      end
+      tmp_download_image.binmode
+      # get image via IIIF with httpclient
+      response = @http_client.get url
+      # write image to tempfile
+      tmp_download_image.write response.body
 
       # create outputs (txt, hOCR, PDF) with tesseract.
       # Look under /usr/share/tesseract/tessdata/configs/ to see hocr and pdf values.
