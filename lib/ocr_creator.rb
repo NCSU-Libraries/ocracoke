@@ -34,15 +34,14 @@ class OcrCreator
         cache_file = File.join '/access-images/cache-staging/iiif', @identifier, "/full/full/0/default.jpg"
         tries = 0
         puts "cache_file #{cache_file}"
-        until File.exist?(cache_file) do
-          puts "File.exist?(cache_file) #{File.exist?(cache_file)}"
-          puts "waiting for head #{@identifier} #{tries}..."
+        loop do
+          puts "File.exist?(#{cache_file}) #{File.exist?(cache_file)}"
+          break if File.exist?(cache_file) || tries > 60
           sleep 0.5
           tries += 1
-          break if tries > 60
         end
         sleep 0.1
-        puts "File.exist?(cache_file) #{File.exist?(cache_file)}"
+        puts "Outside until File.exist? #{File.exist?(cache_file)}"
         # TODO: we could do a cp here to retain the file if we wanted to.
         FileUtils.cp cache_file, tmp_download_image.path
       end
