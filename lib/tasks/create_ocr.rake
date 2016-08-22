@@ -76,4 +76,10 @@ namespace :iiifsi do
     flock_file.flock(File::LOCK_UN)
   end
 
+  desc "Create OCR from a single image identifier"
+  task :create_one_ocr, [:identifier] => :environment do |t, args|
+    ocr_creator = OcrCreator.new(args[:identifier])
+    ocr_creator.process
+  end
+
 end

@@ -11,16 +11,29 @@ class OcrCreator
   end
 
   def process
+
     # create tempfile for image
     request_file_format = 'jpg'
     tmp_download_image = Tempfile.new([@identifier, ".#{request_file_format}"])
-    tmp_download_image.binmode
     # IIIF URL
     url = IiifUrl.from_params identifier: @identifier, format: request_file_format
-    # get image via IIIF with httpclient
-    response = @http_client.get url
-    # write image to tempfile
-    tmp_download_image.write response.body
+
+    if false # FIXME: this is for get rather than head requests
+      tmp_download_image.binmode
+      # get image via IIIF with httpclient
+      response = @http_client.get url
+      # write image to tempfile
+      tmp_download_image.write response.body
+    else
+      puts "HEAD REQUEST"
+      # send a head request for the image
+      response = @http_client.head url
+
+      cache_file = File.join '/access-images/cache/iiif', @identifier, "/full/full/0/default.jpg"
+
+      # TODO: we could do a cp here to retain the file if we wanted to.
+      FileUtils.mv cache_file, tmp_download_image.path
+    end
 
     # create outputs (txt, hOCR, PDF) with tesseract.
     # Look under /usr/share/tesseract/tessdata/configs/ to see hocr and pdf values.

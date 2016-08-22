@@ -43,3 +43,4 @@
         mode: "u=rwx,g=rwx,o=rwx"
       with_items:
         - /access-images/ocr
+        - /access-images/cache
