@@ -11,85 +11,89 @@ class OcrCreator
   end
 
   def process
+    time = Benchmark.measure do
+      # create tempfile for image
+      request_file_format = 'jpg'
+      tmp_download_image = Tempfile.new([@identifier, ".#{request_file_format}"])
+      # IIIF URL
+      url = IiifUrl.from_params identifier: @identifier, format: request_file_format
 
-    # create tempfile for image
-    request_file_format = 'jpg'
-    tmp_download_image = Tempfile.new([@identifier, ".#{request_file_format}"])
-    # IIIF URL
-    url = IiifUrl.from_params identifier: @identifier, format: request_file_format
-
-    # FIXME: this is for get rather than head requests
-    if false
-      tmp_download_image.binmode
-      # get image via IIIF with httpclient
-      response = @http_client.get url
-      # write image to tempfile
-      tmp_download_image.write response.body
-    else
-      # We have access directly to this storage so we can just make a head
-      # request which creates the image but then instead of downloading it via
-      # HTTP we can just move it to where we expect it to be.
-      puts "HEAD REQUEST..."
-      # send a head request for the image
-      response = @http_client.head url
-      puts "HEAD REQUEST completed"
-      cache_file = File.join '/access-images/cache-staging/iiif', @identifier, "/full/full/0/default.jpg"
-      while !File.exist? cache_file
-        sleep 0.1
+      # FIXME: this is for get rather than head requests
+      if false #ENV['PROCESS_FROM_REMOTE_IIIF_SERVER']
+        tmp_download_image.binmode
+        # get image via IIIF with httpclient
+        response = @http_client.get url
+        # write image to tempfile
+        tmp_download_image.write response.body
+      else
+        # We have access directly to this storage so we can just make a head
+        # request which creates the image but then instead of downloading it via
+        # HTTP we can just move it to where we expect it to be.
+        # send a head request for the image
+        response = @http_client.head url
+        cache_file = File.join '/access-images/cache-staging/iiif', @identifier, "/full/full/0/default.jpg"
+        tries = 0
+        while !File.exist?(cache_file) && tries < 20
+          puts "waiting for head #{@identifier}..."
+          sleep 0.1
+          tries += 1
+        end
+        # TODO: we could do a cp here to retain the file if we wanted to.
+        FileUtils.cp cache_file, tmp_download_image.path
       end
-      # TODO: we could do a cp here to retain the file if we wanted to.
-      FileUtils.mv cache_file, tmp_download_image.path
+
+      # create outputs (txt, hOCR, PDF) with tesseract.
+      # Look under /usr/share/tesseract/tessdata/configs/ to see hocr and pdf values.
+      # Do not create the PDF here. Instead just take the hOCR output and
+      # use a lower resolution (more compressed) version of the JPG image of the same
+      # dimensions to combine the hOCR with the JPG into a PDF of reasonable size.
+      `tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr`
+
+      # Create a downsampled smaller version of the JPG
+      `convert -density 150 -quality 20 #{tmp_download_image.path} #{temporary_filepath(@identifier, '.jpg')}`
+
+      # create directory to put final outputs
+      FileUtils.mkdir_p directory_for_identifier(@identifier)
+
+      # move the txt from tesseract to final location
+      FileUtils.mv temporary_filepath(@identifier, '.txt'), final_txt_filepath(@identifier)
+
+      # create the PDF with hocr-pdf
+      # FIXME: sometimes hocr-pdf fails so no PDF gets created. When hocr-tools is
+      #        fixed remove the rescue convert below
+      result = system("hocr-pdf #{@temp_directory} > #{temporary_filepath(@identifier, '.pdf')}")
+      if !result
+        `convert #{temporary_filepath(@identifier, '.jpg')} #{temporary_filepath(@identifier, '.pdf')}`
+      end
+
+      # move the hOCR to the final location
+      FileUtils.mv temporary_filepath(@identifier, '.hocr'), final_hocr_filepath(@identifier)
+
+      # move the PDF to final location if it exists
+      # TODO: could this be simplified by just testing size?
+      if File.exist?(temporary_filepath(@identifier, '.pdf')) && File.size?(temporary_filepath(@identifier, '.pdf'))
+        FileUtils.mv temporary_filepath(@identifier, '.pdf'), final_pdf_filepath(@identifier)
+      end
+
+      # remove the downsampled JPG
+      FileUtils.rm temporary_filepath(@identifier, '.jpg')
+
+      # Do a check that the files were properly created
+      if ocr_already_exists?(@identifier)
+        # extract words and boundaries from hOCR into a JSON file
+        create_word_boundary_json
+        # Set permissions
+        FileUtils.chmod_R('ug=rwX,o=rX', directory_for_first_two(@identifier))
+      else
+        # remove the files if full OCR doesn't exist
+        FileUtils.rm_rf directory_for_identifier(@identifier)
+      end
+
+      # remove the temporary file
+      tmp_download_image.unlink
+
     end
-
-    # create outputs (txt, hOCR, PDF) with tesseract.
-    # Look under /usr/share/tesseract/tessdata/configs/ to see hocr and pdf values.
-    # Do not create the PDF here. Instead just take the hOCR output and
-    # use a lower resolution (more compressed) version of the JPG image of the same
-    # dimensions to combine the hOCR with the JPG into a PDF of reasonable size.
-    `tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr`
-
-    # Create a downsampled smaller version of the JPG
-    `convert -density 150 -quality 20 #{tmp_download_image.path} #{temporary_filepath(@identifier, '.jpg')}`
-
-    # create directory to put final outputs
-    FileUtils.mkdir_p directory_for_identifier(@identifier)
-
-    # move the txt from tesseract to final location
-    FileUtils.mv temporary_filepath(@identifier, '.txt'), final_txt_filepath(@identifier)
-
-    # create the PDF with hocr-pdf
-    # FIXME: sometimes hocr-pdf fails so no PDF gets created. When hocr-tools is
-    #        fixed remove the rescue convert below
-    result = system("hocr-pdf #{@temp_directory} > #{temporary_filepath(@identifier, '.pdf')}")
-    if !result
-      `convert #{temporary_filepath(@identifier, '.jpg')} #{temporary_filepath(@identifier, '.pdf')}`
-    end
-
-    # move the hOCR to the final location
-    FileUtils.mv temporary_filepath(@identifier, '.hocr'), final_hocr_filepath(@identifier)
-
-    # move the PDF to final location if it exists
-    # TODO: could this be simplified by just testing size?
-    if File.exist?(temporary_filepath(@identifier, '.pdf')) && File.size?(temporary_filepath(@identifier, '.pdf'))
-      FileUtils.mv temporary_filepath(@identifier, '.pdf'), final_pdf_filepath(@identifier)
-    end
-
-    # remove the downsampled JPG
-    FileUtils.rm temporary_filepath(@identifier, '.jpg')
-
-    # Do a check that the files were properly created
-    if ocr_already_exists?(@identifier)
-      # extract words and boundaries from hOCR into a JSON file
-      create_word_boundary_json
-      # Set permissions
-      FileUtils.chmod_R('ug=rwX,o=rX', directory_for_first_two(@identifier))
-    else
-      # remove the files if full OCR doesn't exist
-      FileUtils.rm_rf directory_for_identifier(@identifier)
-    end
-
-    # remove the temporary file
-    tmp_download_image.unlink
+    puts "OCR Time #{@identifier} #{time} "
   end
 
   # TODO: extract out OCR JSON into its own file
