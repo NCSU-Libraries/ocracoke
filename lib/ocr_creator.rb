@@ -35,7 +35,7 @@ class OcrCreator
         tries = 0
         puts "cache_file #{cache_file}"
         until File.exist?(cache_file) do
-          puts `ls -lah #{cache_file}`
+          puts "File.exist?(cache_file) #{File.exist?(cache_file)}"
           puts "waiting for head #{@identifier} #{tries}..."
           sleep 0.5
           tries += 1
