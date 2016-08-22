@@ -38,6 +38,7 @@ class OcrCreator
           sleep 0.5
           tries += 1
         end
+        sleep 0.1
         # TODO: we could do a cp here to retain the file if we wanted to.
         FileUtils.cp cache_file, tmp_download_image.path
       end
