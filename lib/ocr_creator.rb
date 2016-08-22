@@ -33,10 +33,11 @@ class OcrCreator
         response = @http_client.head url
         cache_file = File.join '/access-images/cache-staging/iiif', @identifier, "/full/full/0/default.jpg"
         tries = 0
-        until (File.exist?(cache_file) || (tries > 60)) do
+        until File.exist?(cache_file) do
           puts "waiting for head #{@identifier} #{tries}..."
           sleep 0.5
           tries += 1
+          break if tries > 60
         end
         sleep 0.1
         # TODO: we could do a cp here to retain the file if we wanted to.
