@@ -36,6 +36,7 @@ class OcrCreator
         puts "cache_file #{cache_file}"
         loop do
           puts "File.exist?(#{cache_file}) #{File.exist?(cache_file)}"
+          puts `stat #{cache_file}`
           break if File.exist?(cache_file) || tries > 60
           sleep 0.5
           tries += 1
