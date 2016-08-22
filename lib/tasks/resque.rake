@@ -1,7 +1,7 @@
 #lib/tasks/resque.rake
 
 require 'resque/tasks'
-require 'resque/scheduler/tasks'
+#require 'resque/scheduler/tasks'
 
 # I GOT THIS FROM Circa!
 
