@@ -1,5 +1,5 @@
 class ResourceOcrJob < ApplicationJob
-  queue_as :high
+  queue_as :resource_ocr
 
   def perform(resource, images)
     puts "ResourceOcrJob: #{resource}"
