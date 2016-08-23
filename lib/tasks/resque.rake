@@ -31,7 +31,13 @@ namespace :resque do
 
   desc "Start workers"
   task :start_workers => :environment do
-    run_worker('high,ocr,index,concatenate,resource_ocr,low', 3)
+    number_of_workers = case Rails.env
+    when 'staging'
+      1
+    when 'production'
+      3
+    end
+    run_worker('high,ocr,index,concatenate,resource_ocr,low', number_of_workers)
   end
 
 
