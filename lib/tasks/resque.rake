@@ -31,7 +31,7 @@ namespace :resque do
 
   desc "Start workers"
   task :start_workers => :environment do
-    run_worker('high,ocr,index,concatenate,resource_ocr,low', 2)
+    run_worker('high,ocr,index,concatenate,resource_ocr,low', 3)
   end
 
 
