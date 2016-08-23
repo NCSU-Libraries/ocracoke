@@ -33,7 +33,7 @@ namespace :resque do
   task :start_workers => :environment do
     number_of_workers = case Rails.env
     when 'staging'
-      3
+      3 #FIXME: May use less workers in staging in the future.
     when 'production'
       3
     end
