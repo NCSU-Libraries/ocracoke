@@ -12,6 +12,7 @@ class ConcatenateOcrJob < ApplicationJob
         concatenator.concatenate
       else
         # TODO: Set a cronjob to queue the delayed jobs?
+        puts "ConcatenateOcrJob: Preconditions not met #{resource}"
         raise "Preconditions not met!"
       end
       # TODO: Ping another service to let it know it is complete
