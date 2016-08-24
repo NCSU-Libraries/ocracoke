@@ -11,14 +11,9 @@ class ConcatenateOcrJob < ApplicationJob
       if concatenator.preconditions_met?
         concatenator.concatenate
       else
-        sleep 1 # will this allow more of the jobs to complete?
-        if concatenator.preconditions_met?
-          concatenator.concatenate
-        else
-          # TODO: Set a cronjob to queue the delayed jobs?
-          puts "ConcatenateOcrJob: Preconditions not met #{resource}"
-          raise "Preconditions not met!"
-        end
+        # TODO: Set a cronjob to queue the delayed jobs?
+        puts "ConcatenateOcrJob: Preconditions not met #{resource}"
+        raise "Preconditions not met!"
       end
       # TODO: Ping another service to let it know it is complete
     end
