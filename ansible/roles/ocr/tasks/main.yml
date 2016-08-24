@@ -16,7 +16,7 @@
 
 - name: OCR | check out hocr-tools
 # FIXME: change back to: https://github.com/tmbdev/hocr-tools.git https://github.com/jronallo/hocr-tools.git
-  git: repo=https://github.com/jronallo/hocr-tools.git
+  git: repo=https://github.com/tmbdev/hocr-tools.git
      dest=~/hocr-tools
      accept_hostkey=yes
 

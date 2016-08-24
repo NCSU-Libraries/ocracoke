@@ -1,0 +1,5 @@
+---
+- name: create dummy certificate
+  shell: "openssl req -x509 -nodes -batch -days 365 -newkey rsa:2048 -keyout /etc/pki/tls/certs/{{ web_server_name }}.key -out /etc/pki/tls/certs/{{ web_server_name }}.cert"
+  args:
+    creates: "/etc/pki/tls/certs/{{ web_server_name }}.cert"

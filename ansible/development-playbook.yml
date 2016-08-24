@@ -5,8 +5,13 @@
   become_user: root
   remote_user: root
   gather_facts: yes
+  vars:
+    project_name: ocr
+    ruby_version: ruby-2.3.1
   roles:
     - role: basic-setup
+    - role: dev-dummy-cert
+    - role: dev-link-opt-rails
     - role: dev-open-firewall
       ports:
         - 443
@@ -16,10 +21,14 @@
     - role: ocr
     - role: rvm_io.rvm1-ruby
       rvm1_rubies:
-        - ruby-2.3.0
+        - "{{ ruby_version }}"
     - role: rvm-setup
       users:
         - vagrant
+    - role: passenger-apache
+      ruby: "{{ ruby_version }}"
+      apache_virtualhost_lines:
+        - Header set Access-Control-Allow-Origin "*"
     - role: geerlingguy.redis
       redis_appendonly: "yes"
     - role: java

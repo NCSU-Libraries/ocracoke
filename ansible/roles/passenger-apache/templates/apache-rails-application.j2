@@ -1,0 +1,34 @@
+<VirtualHost *:80>
+  ServerName {{ web_server_name }}
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^/(.*)$ https://%{SERVER_NAME}/$1 [L,R,NE]
+</VirtualHost>
+
+<VirtualHost *:443>
+   ServerName {{ web_server_name }}
+   SSLEngine on
+   SSLProtocol all -SSLv2 -SSLv3
+   SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+   SSLHonorCipherOrder on
+
+   SSLCertificateFile /etc/pki/tls/certs/{{ web_server_name }}.cert
+   SSLCertificateKeyFile /etc/pki/tls/certs/{{ web_server_name }}.key
+
+   {% for line in apache_virtualhost_lines %}
+    {{ line }}
+   {% endfor %}
+
+   # Be sure to point to 'public'!
+   DocumentRoot /opt/{{project_name}}/current/public
+   <Directory /opt/{{project_name}}/current/public>
+      RackEnv {{passenger_app_env}}
+      PassengerRuby /usr/local/rvm/gems/{{ruby}}/wrappers/ruby
+      # Relax Apache security settings
+      AllowOverride all
+      Options FollowSymLinks
+      Require all granted
+      # MultiViews must be turned off
+      Options -MultiViews
+   </Directory>
+</VirtualHost>

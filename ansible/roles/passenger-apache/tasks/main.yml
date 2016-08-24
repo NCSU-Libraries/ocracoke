@@ -1,0 +1,33 @@
+---
+- name: install passenger dependencies
+  yum:
+    pkg: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - epel-release
+    - pygpgme
+    - curl
+    - mod_ssl
+# TODO: change to yumrepo when ansible version 2.1 is released
+# TODO: change this to a template?
+- name: add passenger repository
+  get_url:
+    url: https://oss-binaries.phusionpassenger.com/yum/definitions/el-passenger.repo
+    dest: /etc/yum.repos.d/
+- name: install mod_passenger
+  yum: pkg=mod_passenger state=latest
+  notify:
+    - restart httpd
+- name: passenger-devel
+  yum: pkg=passenger-devel state=latest
+  notify:
+    - restart httpd
+- name: add virtualhost for application
+  template:
+    src: apache-rails-application.j2
+    dest: "/etc/httpd/conf.d/passenger-{{project_name}}.conf"
+  notify:
+    - restart httpd
+- name: start httpd
+  service: name=httpd state=started enabled=yes
