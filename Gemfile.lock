@@ -138,6 +138,9 @@ GEM
       redis (~> 3.3)
       resque (~> 1.26)
       rufus-scheduler (~> 3.2)
+    resque-scheduler-web (1.0.1)
+      resque-scheduler (~> 4.0)
+      resque-web (~> 0.0.8)
     resque-web (0.0.9)
       coffee-rails
       jquery-rails
@@ -209,6 +212,7 @@ DEPENDENCIES
   rails (~> 5.0.0)
   resque
   resque-scheduler
+  resque-scheduler-web
   resque-web
   rsolr
   sass-rails (~> 5.0)
