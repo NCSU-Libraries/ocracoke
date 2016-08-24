@@ -12,7 +12,7 @@ class ConcatenateOcrJob < ApplicationJob
         concatenator.concatenate
       else
         # TODO: Set a cronjob to queue the delayed jobs?
-        ConcatenateOcrJob.set(queue: :delayed).perform_later(resource, images)
+        raise "Preconditions not met!"
       end
       # TODO: Ping another service to let it know it is complete
     end
