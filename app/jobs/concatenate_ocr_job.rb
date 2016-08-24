@@ -4,7 +4,7 @@ class ConcatenateOcrJob < ApplicationJob
   def perform(resource, images)
     puts "ConcatenateOcrJob: #{resource}"
     concatenator = OcrConcatenator.new(resource, images)
-    if concatenator.ocr_exists?
+    if concatenator.ocr_exists? && !ENV['REDO_OCR']
       puts "Concatenated OCR already exists for #{resource}"
     else
       concatenator.concatenate

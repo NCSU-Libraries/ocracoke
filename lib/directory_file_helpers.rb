@@ -26,8 +26,12 @@ module DirectoryFileHelpers
   end
 
   # Temporary filepaths
+  def temporary_directory_for_identifier(id)
+    File.join @temp_directory, id
+  end
+
   def temporary_filepath(id, extension)
-    File.join @temp_directory, id + extension
+    File.join temporary_directory_for_identifier(id), id + extension
   end
 
   # Based on a identifier determine if all the OCR files already exist.
@@ -36,8 +40,16 @@ module DirectoryFileHelpers
   # it will be completely empty.
   def ocr_already_exists?(id)
     File.exist?(final_txt_filepath(id)) &&
-    File.size?(final_hocr_filepath(id)) &&
+    hocr_already_exists?(id) &&
     pdf_exists?(id)
+  end
+
+  def hocr_already_exists?(id)
+    File.size?(final_hocr_filepath(id))
+  end
+
+  def json_already_exists?(id)
+    File.size?(final_json_file_filepath(id))
   end
 
   def pdf_exists?(id)

@@ -37,10 +37,9 @@ namespace :resque do
     when 'production'
       3
     end
-    run_worker('high,ocr,index,concatenate,resource_ocr,low', number_of_workers)
+    # high,ocr,word_boundaries,index,concatenate,resource_ocr,low
+    run_worker('ocr,word_boundaries,index,concatenate,resource_ocr', number_of_workers)
   end
-
-
 
   def store_pids(pids, mode)
     pids_to_store = pids
@@ -81,7 +80,11 @@ namespace :resque do
     ##  make sure log/resque_err, log/resque_stdout are writable.
     ops = {:pgroup => true, :err => [(Rails.root + "log/resque_err").to_s, "a"],
                             :out => [(Rails.root + "log/resque_stdout").to_s, "a"]}
-    env_vars = {"QUEUE" => queue.to_s, 'RAILS_ENV' => Rails.env.to_s}
+    env_vars = {
+      "QUEUE" => queue.to_s,
+      'RAILS_ENV' => Rails.env.to_s,
+      'REDO_OCR' => 'true'
+    }
 
     pids = []
     count.times do
