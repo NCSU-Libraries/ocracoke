@@ -63,7 +63,7 @@ namespace :iiifsi do
       # TODO: skip this step if the resource identifier is the same as
       #       the single image identifier
       concatenator = OcrConcatenator.new(resource_document['resource'], resource_document['images'])
-      if concatenator.ocr_exists?
+      if concatenator.concatenated_ocr_exists?
         puts "Concatenated OCR already exists for #{resource_document['resource']}"
       else
         puts "Creating concatenated PDF for #{resource_document['resource']}"

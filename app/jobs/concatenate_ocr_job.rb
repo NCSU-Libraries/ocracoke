@@ -4,10 +4,16 @@ class ConcatenateOcrJob < ApplicationJob
   def perform(resource, images)
     puts "ConcatenateOcrJob: #{resource}"
     concatenator = OcrConcatenator.new(resource, images)
-    if concatenator.ocr_exists? && !ENV['REDO_OCR']
+    if concatenator.concatenated_ocr_exists? && !ENV['REDO_OCR']
       puts "Concatenated OCR already exists for #{resource}"
     else
-      concatenator.concatenate
+      # If the preconditions aren't met then requeue the job for later.
+      if concatenator.preconditions_met?
+        concatenator.concatenate
+      else
+        # TODO: Set a cronjob to queue the delayed jobs
+        ConcatenateOcrJob.set(wait: 10.minutes).perform_later(resource, images)
+      end
       # TODO: Ping another service to let it know it is complete
     end
   end

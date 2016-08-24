@@ -7,6 +7,14 @@ class OcrConcatenator
     @images = images
   end
 
+  # All of the text files and PDF files must be present before we
+  # can do this. So this is the check we can use.
+  def preconditions_met?
+    @images.all? do |image|
+      pdf_already_exists?(image) && txt_already_exists?(image)
+    end
+  end
+
   def concatenate
     # Create directory for files at resource level
     unless File.exist? directory_for_identifier(@resource)
@@ -49,8 +57,8 @@ class OcrConcatenator
     end
   end
 
-  def ocr_exists?
-    pdf_exists?(@resource) && File.exist?(final_txt_filepath(@resource))
+  def concatenated_ocr_exists?
+    pdf_already_exists?(@resource) && txt_already_exists?(@resource)
   end
 
 end
