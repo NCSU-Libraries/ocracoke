@@ -1,7 +1,7 @@
 #lib/tasks/resque.rake
 
 require 'resque/tasks'
-require 'resque/scheduler/tasks'
+# require 'resque/scheduler/tasks'
 
 # I GOT THIS FROM Circa!
 
@@ -38,6 +38,9 @@ namespace :resque do
       3
     end
     # high,ocr,word_boundaries,index,concatenate,resource_ocr,low
+    # Note: A concatenate job may go into the 'delayed' queue. By default this
+    # queue is not run. resque-scheduler-web doesn't work.
+    # TODO: Figure out how to automatically run delayed jobs.
     run_worker('ocr,word_boundaries,index,concatenate,resource_ocr', number_of_workers)
   end
 

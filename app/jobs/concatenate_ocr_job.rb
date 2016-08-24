@@ -11,8 +11,8 @@ class ConcatenateOcrJob < ApplicationJob
       if concatenator.preconditions_met?
         concatenator.concatenate
       else
-        # TODO: Set a cronjob to queue the delayed jobs
-        ConcatenateOcrJob.set(wait: 10.minutes).perform_later(resource, images)
+        # TODO: Set a cronjob to queue the delayed jobs?
+        ConcatenateOcrJob.set(queue: :delayed).perform_later(resource, images)
       end
       # TODO: Ping another service to let it know it is complete
     end
