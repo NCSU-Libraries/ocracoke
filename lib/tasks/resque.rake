@@ -1,7 +1,7 @@
 #lib/tasks/resque.rake
 
 require 'resque/tasks'
-# require 'resque/scheduler/tasks'
+require 'resque/scheduler/tasks'
 
 # I GOT THIS FROM Circa!
 
@@ -36,6 +36,8 @@ namespace :resque do
       4 #FIXME: May use less workers in staging in the future.
     when 'production'
       4
+    else
+      1
     end
     # high,ocr,word_boundaries,index,concatenate,resource_ocr,low
     # Note: A concatenate job may go into the 'delayed' queue. By default this
@@ -98,6 +100,12 @@ namespace :resque do
       pids << pid
     end
 
+    # start up one process to work on delayed jobs
+    pid = spawn(env_vars, "rake resque:scheduler", ops)
+    Process.detach(pid)
+    pids << pid
+
     store_pids(pids, :append)
   end
+
 end
