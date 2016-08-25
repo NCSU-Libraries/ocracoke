@@ -38,6 +38,7 @@ class OcrCreator
       # Do not create the PDF with tesseract. Instead just take the hOCR output and
       # use a lower resolution (more compressed) version of the JPG image of the same
       # dimensions to combine the hOCR with the JPG into a PDF of reasonable size.
+      puts "Tesseract starting for #{@identifier}"
       `tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr`
       puts "Tesseract complete for #{@identifier}"
 
