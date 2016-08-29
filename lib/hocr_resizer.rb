@@ -29,13 +29,7 @@ class HocrResizer
           b, slope, constant_term = title_part.split(' ')
           slope = slope.to_f * @pct
           constant_term = constant_term.to_f * @pct
-
-
-          bl = "baseline #{slope} #{constant_term}"
-          # puts title_part
-          # puts bl
-          # puts
-          # bl
+          "baseline #{slope} #{constant_term}"
         else
           title_part
         end
