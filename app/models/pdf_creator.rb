@@ -38,15 +38,17 @@ class PdfCreator
       url = IiifUrl.from_params url_params(image)
       puts "PdfCreator downloading #{url}"
       response = http_client.get url
-      jpg_tempfile = tempfile_jpg_path(image)
-      File.open(jpg_tempfile, 'w') do |fh|
+      tmp_download_image = Tempfile.new([image, ".jpg"])
+      File.open(tmp_download_image.path, 'w') do |fh|
         fh.binmode
         fh.puts response.body
-        # TODO: create downsampled JPG for PDF
-        # Create a downsampled smaller version of the JPG suitable for a PDF.
-        # `convert -density 150 -quality 20 #{tmp_download_image.path} #{temporary_filepath(@identifier, '.jpg')}`
-        puts "Converted jpg #{@identifier}"
       end
+
+      # Create a downsampled smaller version of the JPG suitable for a PDF.
+      jpg_tempfile = tempfile_jpg_path(image)
+      `convert -density 150 -quality 20 #{tmp_download_image.path} #{jpg_tempfile}`
+      puts "Converted hOCR JPG #{@identifier}"
+      tmp_download_image.unlink
     end
   end
 
