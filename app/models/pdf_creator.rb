@@ -42,6 +42,10 @@ class PdfCreator
       File.open(jpg_tempfile, 'w') do |fh|
         fh.binmode
         fh.puts response.body
+        # TODO: create downsampled JPG for PDF
+        # Create a downsampled smaller version of the JPG suitable for a PDF.
+        # `convert -density 150 -quality 20 #{tmp_download_image.path} #{temporary_filepath(@identifier, '.jpg')}`
+        puts "Converted jpg #{@identifier}"
       end
     end
   end

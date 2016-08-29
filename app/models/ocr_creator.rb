@@ -44,10 +44,6 @@ class OcrCreator
       `tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr`
       puts "Tesseract complete for #{@identifier}"
 
-      # Create a downsampled smaller version of the JPG suitable for a PDF.
-      `convert -density 150 -quality 20 #{tmp_download_image.path} #{temporary_filepath(@identifier, '.jpg')}`
-      puts "Converted jpg #{@identifier}"
-
       # Remove the temporary file as we don't need it anymore.
       tmp_download_image.unlink
 
@@ -57,28 +53,8 @@ class OcrCreator
       # move the txt from tesseract to final location
       FileUtils.mv temporary_filepath(@identifier, '.txt'), final_txt_filepath(@identifier)
 
-      # At this point the temporary directory for the image only has the
-      # hOCR file and the jpg image for the PDF.
-
-      # # create the PDF with hocr-pdf
-      # # FIXME: sometimes hocr-pdf fails so no PDF gets created.
-      # #        When hocr-tools is fixed remove the rescue convert below.
-      # puts "hocr-pdf start #{@identifier}"
-      # result = system("hocr-pdf #{temporary_directory_for_id} > #{temporary_filepath(@identifier, '.pdf')}")
-      # if result
-      #   puts "hocr-pdf done for #{@identifier}"
-      # else
-      #   puts "hocr-pdf failed for #{@identifier}"
-      #   `convert #{temporary_filepath(@identifier, '.jpg')} #{temporary_filepath(@identifier, '.pdf')}`
-      # end
-
       # move the hOCR to the final location
       FileUtils.mv temporary_filepath(@identifier, '.hocr'), final_hocr_filepath(@identifier)
-      # move the PDF to final location if it exists
-      FileUtils.mv temporary_filepath(@identifier, '.pdf'), final_pdf_filepath(@identifier)
-
-      # remove the downsampled JPG
-      FileUtils.rm temporary_filepath(@identifier, '.jpg')
 
       # Do a check that the files were properly created
       if ocr_already_exists?(@identifier)

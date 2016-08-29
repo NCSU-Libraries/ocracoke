@@ -39,9 +39,7 @@ module DirectoryFileHelpers
   # by tesseract result in no text. In these cases the txt file will exist, but
   # it will be completely empty.
   def ocr_already_exists?(id)
-    txt_already_exists?(id) &&
-    hocr_already_exists?(id) &&
-    pdf_already_exists?(id)
+    txt_already_exists?(id) && hocr_already_exists?(id)
   end
 
   def txt_already_exists?(id)
