@@ -10,7 +10,8 @@ class PdfCreator
     # that is appropriate for the use.
     @percentage = percentage.to_i
     @temp_directory = File.join(Dir.tmpdir, 'create_pdf')
-    FileUtils.mkdir_p File.join(@temp_directory, @resource)
+    @temp_directory_resource = File.join(@temp_directory, @resource)
+    FileUtils.mkdir_p @temp_directory_resource
   end
 
   def preconditions_met?
@@ -53,6 +54,7 @@ class PdfCreator
   end
 
   def create_resource_hocr
+    # TODO: change temporary_directory_for_identifier(@resource) to @temp_directory_resource
     result = system("hocr-pdf #{temporary_directory_for_identifier(@resource)} > #{final_pdf_filepath(@resource)}")
     if result
       puts "hocr-pdf done for #{@resource}"
@@ -64,6 +66,10 @@ class PdfCreator
 
   def pdf_exists?
     pdf_already_exists?(@resource)
+  end
+
+  def clean_up
+    FileUtils.rm_rf @temp_directory_resource
   end
 
   private
@@ -89,10 +95,6 @@ class PdfCreator
 
   def tempfile_jpg_path(image)
     outfile_path image, '.jpg'
-  end
-
-  def clean_up
-
   end
 
 end
