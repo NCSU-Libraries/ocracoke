@@ -1,10 +1,10 @@
-class ConcatenateOcrJob < ApplicationJob
-  queue_as :concatenate
+class ConcatenateOcrTxtJob < ApplicationJob
+  queue_as :concatenate_txt
 
   def perform(resource, images)
     puts "ConcatenateOcrJob: #{resource}"
-    concatenator = OcrConcatenator.new(resource, images)
-    if concatenator.concatenated_ocr_exists? && !ENV['REDO_OCR']
+    concatenator = OcrTxtConcatenator.new(resource, images)
+    if concatenator.concatenated_ocr_txt_exists? && !ENV['REDO_OCR']
       puts "Concatenated OCR already exists for #{resource}"
     elsif concatenator.preconditions_met?
       puts "Doing ConcatenateOcrJob: #{resource}"
@@ -15,7 +15,7 @@ class ConcatenateOcrJob < ApplicationJob
       # Sometimes files haven't been processed or finished writing yet so we
       # just delay this for a time until it can be added back into its queue.
       puts "ConcatenateOcrJob: Preconditions not met #{resource}"
-      ConcatenateOcrJob.set(wait: 10.minutes).perform_later resource, images
+      ConcatenateOcrTxtJob.set(wait: 10.minutes).perform_later resource, images
     end
   end
 
