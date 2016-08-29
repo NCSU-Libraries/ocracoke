@@ -43,7 +43,7 @@ namespace :resque do
     # Note: A concatenate job may go into the 'delayed' queue. By default this
     # queue is not run. resque-scheduler-web doesn't work.
     # TODO: Figure out how to automatically run delayed jobs.
-    run_worker('ocr,word_boundaries,index,concatenate_txt,delayed,resource_ocr', number_of_workers)
+    run_worker('ocr,word_boundaries,index,concatenate_txt,pdf,delayed,resource_ocr', number_of_workers)
   end
 
   def store_pids(pids, mode)
