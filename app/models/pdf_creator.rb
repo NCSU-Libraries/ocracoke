@@ -13,6 +13,12 @@ class PdfCreator
     FileUtils.mkdir_p File.join(@temp_directory, @resource)
   end
 
+  def preconditions_met?
+    @images.all? do |image|
+      hocr_already_exists?(image)
+    end
+  end
+
   def create
     download_all_jpgs
     resize_all_hocr
@@ -54,6 +60,10 @@ class PdfCreator
       puts "hocr-pdf failed for #{@resource}"
       # `convert #{temporary_filepath(@identifier, '.jpg')} #{temporary_filepath(@identifier, '.pdf')}`
     end
+  end
+
+  def pdf_exists?
+    pdf_already_exists?(@resource)
   end
 
   private
