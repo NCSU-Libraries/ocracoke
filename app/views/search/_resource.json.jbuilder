@@ -13,11 +13,15 @@ xywh = if !@pages_json[doc[:id]] || page_word_list[doc[:word]].nil?
 else
   word_bounds = page_word_list[doc[:word]].shift
   # FIXME: This is the wrong place to set all of these to integers
-  x = word_bounds["x0"].to_i
-  y = word_bounds["y0"].to_i
-  w = word_bounds["x1"].to_i - word_bounds["x0"].to_i
-  h = word_bounds["y1"].to_i - word_bounds["y0"].to_i
-  "#{x},#{y},#{w},#{h}"
+  if word_bounds
+    x = word_bounds["x0"].to_i
+    y = word_bounds["y0"].to_i
+    w = word_bounds["x1"].to_i - word_bounds["x0"].to_i
+    h = word_bounds["y1"].to_i - word_bounds["y0"].to_i
+    "#{x},#{y},#{w},#{h}"
+  else
+    "0,0,0,0"
+  end
 end
 
 # FIXME: How to make this so it is possible to have different canvas URLs to
