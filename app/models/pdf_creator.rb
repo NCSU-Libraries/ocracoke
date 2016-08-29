@@ -30,6 +30,8 @@ class PdfCreator
   def download_all_jpgs
     http_client = HTTPClient.new
     http_client.receive_timeout = 240
+    # FIXME: This should be verified!!!
+    http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
     # TODO: currently this depends on the image server implementing sizeByPct
     @images.each do |image|

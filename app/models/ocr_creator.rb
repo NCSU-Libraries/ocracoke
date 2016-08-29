@@ -8,6 +8,8 @@ class OcrCreator
     FileUtils.mkdir_p @temp_directory
     @http_client = HTTPClient.new
     @http_client.receive_timeout = 240
+    # FIXME: This should be verified!!!
+    @http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
 
   def process
