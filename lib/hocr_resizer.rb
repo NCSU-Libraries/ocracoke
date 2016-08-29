@@ -32,10 +32,10 @@ class HocrResizer
 
 
           bl = "baseline #{slope} #{constant_term}"
-          puts title_part
-          puts bl
-          puts
-          bl
+          # puts title_part
+          # puts bl
+          # puts
+          # bl
         else
           title_part
         end
