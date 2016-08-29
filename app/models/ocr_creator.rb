@@ -60,17 +60,17 @@ class OcrCreator
       # At this point the temporary directory for the image only has the
       # hOCR file and the jpg image for the PDF.
 
-      # create the PDF with hocr-pdf
-      # FIXME: sometimes hocr-pdf fails so no PDF gets created.
-      #        When hocr-tools is fixed remove the rescue convert below.
-      puts "hocr-pdf start #{@identifier}"
-      result = system("hocr-pdf #{temporary_directory_for_id} > #{temporary_filepath(@identifier, '.pdf')}")
-      if result
-        puts "hocr-pdf done for #{@identifier}"
-      else
-        puts "hocr-pdf failed for #{@identifier}"
-        `convert #{temporary_filepath(@identifier, '.jpg')} #{temporary_filepath(@identifier, '.pdf')}`
-      end
+      # # create the PDF with hocr-pdf
+      # # FIXME: sometimes hocr-pdf fails so no PDF gets created.
+      # #        When hocr-tools is fixed remove the rescue convert below.
+      # puts "hocr-pdf start #{@identifier}"
+      # result = system("hocr-pdf #{temporary_directory_for_id} > #{temporary_filepath(@identifier, '.pdf')}")
+      # if result
+      #   puts "hocr-pdf done for #{@identifier}"
+      # else
+      #   puts "hocr-pdf failed for #{@identifier}"
+      #   `convert #{temporary_filepath(@identifier, '.jpg')} #{temporary_filepath(@identifier, '.pdf')}`
+      # end
 
       # move the hOCR to the final location
       FileUtils.mv temporary_filepath(@identifier, '.hocr'), final_hocr_filepath(@identifier)
