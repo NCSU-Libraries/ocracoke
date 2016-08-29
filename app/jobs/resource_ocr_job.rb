@@ -6,7 +6,8 @@ class ResourceOcrJob < ApplicationJob
     images.each do |image|
       OcrJob.perform_later image, resource
     end
-    ConcatenateOcrJob.perform_later resource, images
+    ConcatenateOcrTxtJob.perform_later resource, images
+    PdfCreatorJob.perform_later resource, images, 50
   end
 
 end

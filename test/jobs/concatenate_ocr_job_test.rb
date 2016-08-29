@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ConcatenateOcrJobTest < ActiveJob::TestCase
+class ConcatenateOcrTxtJobTest < ActiveJob::TestCase
   # test "the truth" do
   #   assert true
   # end
