@@ -1,13 +1,3 @@
-GIT
-  remote: git://github.com/sinatra/sinatra.git
-  revision: 1b0edc0aeaaf4839cadfcec1b21da86e6af1d4c0
-  specs:
-    sinatra (2.0.0.beta2)
-      mustermann (= 1.0.0.beta2)
-      rack (~> 2.0)
-      rack-protection (= 2.0.0.beta2)
-      tilt (~> 2.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -170,6 +160,11 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    sinatra (2.0.0.beta2)
+      mustermann (= 1.0.0.beta2)
+      rack (~> 2.0)
+      rack-protection (= 2.0.0.beta2)
+      tilt (~> 2.0)
     spring (1.7.2)
     spring-watcher-listen (2.0.0)
       listen (>= 2.7, < 4.0)
@@ -227,7 +222,7 @@ DEPENDENCIES
   resque-web
   rsolr
   sass-rails (~> 5.0)
-  sinatra!
+  sinatra (= 2.0.0.beta2)
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3
