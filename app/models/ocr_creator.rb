@@ -56,7 +56,7 @@ class OcrCreator
       # Do a check that the files were properly created
       if ocr_already_exists?(@identifier)
         # Set permissions
-        FileUtils.chmod_R('ug=rwX,o=rX', directory_for_first_two(@identifier))
+        FileUtils.chmod_R('ug=rwX,o=rX', directory_for_identifier(@identifier))
       else
         # remove the files if full OCR doesn't exist
         FileUtils.rm_rf directory_for_identifier(@identifier)
