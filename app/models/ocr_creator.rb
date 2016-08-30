@@ -9,7 +9,7 @@ class OcrCreator
     @http_client = HTTPClient.new
     @http_client.receive_timeout = 240
     # FIXME: This should be verified!!!
-    @http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    # @http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
 
   def process
@@ -35,11 +35,8 @@ class OcrCreator
       # write image to tempfile
       tmp_download_image.write response.body
 
-      # create outputs (txt, hOCR, PDF) with tesseract.
-      # Look under /usr/share/tesseract/tessdata/configs/ to see hocr and pdf values.
-      # Do not create the PDF with tesseract. Instead just take the hOCR output and
-      # use a lower resolution (more compressed) version of the JPG image of the same
-      # dimensions to combine the hOCR with the JPG into a PDF of reasonable size.
+      # create outputs (txt, hOCR) with tesseract.
+      # Look under /usr/share/tesseract/tessdata/configs/ to see hocr values.
       puts "Tesseract starting for #{@identifier}"
       `tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr`
       puts "Tesseract complete for #{@identifier}"
