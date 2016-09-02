@@ -71,7 +71,9 @@ class PdfCreator
       r.save
       puts "hocr-pdf done for #{@resource}"
     else
-      FileUtils.rm final_pdf_filepath(@resource)
+      if File.exist?(final_pdf_filepath(@resource))
+        FileUtils.rm final_pdf_filepath(@resource)
+      end
       puts "hocr-pdf failed for #{@resource}"
     end
   end
