@@ -38,7 +38,9 @@ class OcrCreator
       # create outputs (txt, hOCR) with tesseract.
       # Look under /usr/share/tesseract/tessdata/configs/ to see hocr values.
       puts "Tesseract starting for #{@identifier}"
-      `tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr`
+      tesseract_cmd = "tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr"
+      puts tesseract_cmd
+      `#{tesseract_cmd}`
       puts "Tesseract complete for #{@identifier}"
 
       # Remove the temporary file as we don't need it anymore.
@@ -53,14 +55,23 @@ class OcrCreator
       # move the hOCR to the final location
       FileUtils.mv temporary_filepath(@identifier, '.hocr'), final_hocr_filepath(@identifier)
 
-      # Do a check that the files were properly created
-      if ocr_already_exists?(@identifier)
-        # Set permissions
-        FileUtils.chmod_R('ug=rwX,o=rX', directory_for_identifier(@identifier))
+      # Set permissions
+      FileUtils.chmod_R('ug=rwX,o=rX', directory_for_identifier(@identifier))
+
+      image = Image.find_by(identifier: @identifier)
+      if hocr_already_exists?(@identifier)
+        image.hocr = DateTime.now
+        if txt_already_exists?(@identifier)
+          image.txt = DateTime.now
+        else
+          FileUtils.rm final_txt_filepath(@identifier)
+        end
       else
-        # remove the files if full OCR doesn't exist
-        FileUtils.rm_rf directory_for_identifier(@identifier)
+        # If the hocr doesn't exist then we get rid of the txt too
+        FileUtils.rm final_hocr_filepath(@identifier)
+        FileUtils.rm final_txt_filepath(@identifier)
       end
+      image.save
 
       # clean up the temporary directory used for processing a single image
       FileUtils.rm_rf temporary_directory_for_id

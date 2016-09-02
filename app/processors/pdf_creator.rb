@@ -64,11 +64,14 @@ class PdfCreator
   def create_resource_hocr
     # TODO: change temporary_directory_for_identifier(@resource) to @temp_directory_resource
     result = system("hocr-pdf #{temporary_directory_for_identifier(@resource)} > #{final_pdf_filepath(@resource)}")
-    if result
+
+    if pdf_exists?
+      r = Resource.find_by(identifier: @resource)
+      r.pdf = DateTime.now
+      r.save
       puts "hocr-pdf done for #{@resource}"
     else
       puts "hocr-pdf failed for #{@resource}"
-      # `convert #{temporary_filepath(@identifier, '.jpg')} #{temporary_filepath(@identifier, '.pdf')}`
     end
   end
 

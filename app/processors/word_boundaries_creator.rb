@@ -25,6 +25,16 @@ class WordBoundariesCreator
     File.open(final_json_file_filepath(@id), 'w') do |fh|
       fh.puts json.to_json
     end
+
+    if hocr_exists?
+      image = Image.find_by(identifier: @id)
+      image.json = DateTime.now
+      image.save
+    end
+  end
+
+  def preconditions_met?
+    json_exists?
   end
 
   def hocr_exists?

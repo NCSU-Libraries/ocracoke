@@ -27,6 +27,13 @@ class OcrTxtConcatenator
         fh.puts "\n\n\n"
       end
     end
+
+    if concatenated_ocr_txt_exists?
+      r = Resource.find_by(identifier: @resource)
+      r.txt = DateTime.now
+      r.save
+    end
+
   end
 
   def concatenated_ocr_txt_exists?

@@ -9,9 +9,13 @@ class OcrJob < ApplicationJob
       puts "OCR already exists for #{image}"
     else
       ocr_creator.process
-      WordBoundariesJob.perform_later image
-      if resource
-        IndexOcrJob.perform_later resource, image
+      if ocr_creator.ocr_exists?
+        WordBoundariesJob.perform_later image
+        if resource
+          IndexOcrJob.perform_later resource, image
+        end
+      else
+        OcrJob.set(wait: 30.minutes).perform_later(image, resource)
       end
     end
   end
