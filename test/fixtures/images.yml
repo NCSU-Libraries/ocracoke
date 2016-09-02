@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  identifier: MyString
+  txt: 2016-09-02 01:02:22
+  hocr: 2016-09-02 01:02:22
+  json: 2016-09-02 01:02:22
+  resource: one
+
+two:
+  identifier: MyString
+  txt: 2016-09-02 01:02:22
+  hocr: 2016-09-02 01:02:22
+  json: 2016-09-02 01:02:22
+  resource: two

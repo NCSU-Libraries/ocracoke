@@ -1,8 +1,7 @@
 namespace :iiifsi do
   # TODO: this is possibly a temporary script
-  desc 'check on presence of required OCR files'
-  task :check_ocr => :environment do
-    errors = []
+  desc 'seed the database with information from the files on the filesystem'
+  task :db_from_files => :environment do
     directory_glob = File.join Rails.configuration.iiifsi['ocr_directory'], '*/*'
     Dir.glob(directory_glob).each do |directory|
       # This only works in the case when images have an underscore and resources don't
@@ -13,43 +12,40 @@ namespace :iiifsi do
       json = File.join directory, basename + '.json'
       pdf = File.join directory, basename + '.pdf'
 
-      directory_errors = []
+      # Create the resource if it doesn't exist
+      resource_identifier = basename.split('_').first
+      resource = Resource.find_or_create_by(identifier: resource_identifier)
 
       if directory.include?('_') # image
+        image = Image.find_or_create_by(identifier: basename)
+        image.resource = resource
+
         # Some pages may have no text found at all but do have hocr
-        if !File.exist?(txt) 
-          directory_errors << 'txt'
+        if File.exist?(txt)
+          image.txt = DateTime.now
         end
         # Check for hocr & json
-        if !File.size?(hocr)
-          directory_errors << 'hocr'
+        if File.size?(hocr)
+          image.hocr = DateTime.now
         end
-        if !File.size?(json)
-          directory_errors << 'json'
+        if File.size?(json)
+          image.json = DateTime.now
         end
+        image.save
 
       else # we have a resource
         # We would expect at least one page to have text
-        if !File.size?(txt)
-          directory_errors << 'txt'
+        if File.size?(txt)
+          resource.txt = DateTime.now
         end
         # Check for PDF
-        if !File.size?(pdf)
-          directory_errors << 'pdf'
+        if File.size?(pdf)
+          resource.pdf = DateTime.now
         end
-      end
-
-      if !directory_errors.blank?
-        puts "#{basename}: #{directory_errors}"
-        errors << {basename => directory_errors}
+        resource.save
       end
 
     end
 
-    date = DateTime.now.strftime('%Y-%m-%d-%H-%M-%S')
-    error_file = File.join Rails.root, 'tmp', "empty-file-errors-#{date}.log"
-    File.open(error_file, 'w') do |fh|
-      fh.puts errors.to_json
-    end
   end
 end
