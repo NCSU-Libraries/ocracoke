@@ -10,7 +10,7 @@ class NcsuFileCreator
       url
     else
       # Just create the source file for the Technicians if no URL given
-      ipo = "Technician"
+      ipo = "Nubian Message"
       "http://d.lib.ncsu.edu/collections/catalog.json?f[format][]=Text&f[ispartof_facet][]=#{ipo}"
     end
     @results = []
