@@ -29,6 +29,7 @@ class OcrIndexer
       i = Image.find_by identifier: @image
       i.indexed = DateTime.now
       i.save
+      solr.commit
 
       puts "add #{@image}: #{add}"
     else
