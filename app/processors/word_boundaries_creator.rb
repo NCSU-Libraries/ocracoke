@@ -15,12 +15,14 @@ class WordBoundariesCreator
       # Filter out non-word characters
       word_match = text.match /\w+/
       next if word_match.nil?
-      word = word_match[0]
-      next if word.length < 3
-      json[word] ||= []
+      # word = word_match[0]
+      # next if word.length < 3
+      # json[word] ||= []
+      json[text] ||= []
       title = span['title']
       info = parse_hocr_title(title)
-      json[word] << info
+      # json[word] << info
+      json[text] << info
     end
     File.open(final_json_file_filepath(@id), 'w') do |fh|
       fh.puts json.to_json
