@@ -38,7 +38,7 @@ class OcrCreator
       # create outputs (txt, hOCR) with tesseract.
       # Look under /usr/share/tesseract/tessdata/configs/ to see hocr values.
       puts "Tesseract starting for #{@identifier}"
-      tesseract_cmd = "tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr"
+      tesseract_cmd = "nice tesseract #{tmp_download_image.path} #{@identifier} -l eng hocr"
       puts tesseract_cmd
       `#{tesseract_cmd}`
       puts "Tesseract complete for #{@identifier}"

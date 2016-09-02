@@ -98,7 +98,7 @@ class PdfCreator
   end
 
   def outfile_path(image, extension)
-    File.join temporary_directory_for_identifier(@resource), image + extension
+    File.join @temp_directory_resource, image + extension
   end
 
   def outfile_hocr_path(image)
