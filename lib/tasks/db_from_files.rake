@@ -14,43 +14,35 @@ namespace :iiifsi do
 
       # Create the resource if it doesn't exist
       resource_identifier = basename.split('_').first
-      resource = Resource.find_by(identifier: resource_identifier)
-      if resource && !ENV['REDO_OCR']
-        puts "Already exists: #{resource_identifier}"
-      else
-        # if the resource doesn't exist we create it before continuing
-        resource = Resource.create(identifier: resource_identifier)
+      resource = Resource.find_or_create_by(identifier: resource_identifier)
 
-        # If this is directory is for an image we handle things differently
-        # than if it is a resource.
-        if directory.include?('_') # image
-          image = Image.find_or_create_by(identifier: basename)
-          image.resource = resource
+      if directory.include?('_') # image
+        image = Image.find_or_create_by(identifier: basename)
+        image.resource = resource
 
-          # Some pages may have no text found at all but do have hocr
-          if File.exist?(txt)
-            image.txt = File.mtime(txt)
-          end
-          # Check for hocr & json
-          if File.size?(hocr)
-            image.hocr = File.mtime(hocr)
-          end
-          if File.size?(json)
-            image.json = File.mtime(json)
-          end
-          image.save
-
-        else # we have a resource
-          # We would expect at least one page to have text
-          if File.size?(txt)
-            resource.txt = File.mtime(txt)
-          end
-          # Check for PDF
-          if File.size?(pdf)
-            resource.pdf = File.mtime(pdf)
-          end
-          resource.save
+        # Some pages may have no text found at all but do have hocr
+        if !image.txt && File.exist?(txt)
+          image.txt = File.mtime(txt)
         end
+        # Check for hocr & json
+        if !image.hocr && File.size?(hocr)
+          image.hocr = File.mtime(hocr)
+        end
+        if !image.json && File.size?(json)
+          image.json = File.mtime(json)
+        end
+        image.save
+
+      else # we have a resource
+        # We would expect at least one page to have text
+        if !resource.txt && File.size?(txt)
+          resource.txt = File.mtime(txt)
+        end
+        # Check for PDF
+        if !resource.pdf && File.size?(pdf)
+          resource.pdf = File.mtime(pdf)
+        end
+        resource.save
       end
 
     end
