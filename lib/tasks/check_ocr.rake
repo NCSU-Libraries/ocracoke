@@ -40,7 +40,7 @@ namespace :iiifsi do
       end
 
       if !directory_errors.blank?
-        puts "basename: #{directory_errors}"
+        puts "#{basename}: #{directory_errors}"
         errors << {basename => directory_errors}
       end
 
