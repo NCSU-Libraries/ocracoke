@@ -7,40 +7,41 @@ namespace :iiifsi do
     Dir.glob(directory_glob).each do |directory|
       # This only works in the case when images have an underscore and resources don't
       basename = File.basename directory
+      # puts basename
       txt = File.join directory, basename + '.txt'
       hocr = File.join directory, basename + '.hocr'
       json = File.join directory, basename + '.json'
       pdf = File.join directory, basename + '.pdf'
 
-      # For both images and resources we check for txt
-      if !File.size?(txt)
-        errors << txt
-        puts "txt: #{basename}"
-      end
+      directory_errors = []
 
       if directory.include?('_') # image
+        # Some pages may have no text found at all but do have hocr
+        if !File.exist?(txt) && File.size?(hocr)
+          directory_errors << 'txt'
+        end
         # Check for hocr & json
         if !File.size?(hocr)
-          errors << hocr
-          puts "hocr: #{basename}"
+          directory_errors << 'hocr'
         end
         if !File.size?(json)
-          errors << json
-          puts "json: #{basename}"
-        end
-
-        # Remove any PDFs while we're at it
-        if File.exist?(pdf)
-          puts "Removing PDF: #{basename}"
-          FileUtils.rm pdf
+          directory_errors << 'json'
         end
 
       else # we have a resource
+        # We would expect at least one page to have text
+        if !File.size?(txt)
+          directory_errors << 'txt'
+        end
         # Check for PDF
         if !File.size?(pdf)
-          errors << pdf
-          puts "pdf: #{basename}"
+          directory_errors << 'pdf'
         end
+      end
+
+      if !directory_errors.blank?
+        puts "basename: #{directory_errors}"
+        errors << {basename => directory_errors}
       end
 
     end
@@ -48,7 +49,7 @@ namespace :iiifsi do
     date = DateTime.now.strftime('%Y-%m-%d-%H-%M-%S')
     error_file = File.join Rails.root, 'tmp', "empty-file-errors-#{date}.log"
     File.open(error_file, 'w') do |fh|
-      fh.puts errors
+      fh.puts errors.to_json
     end
   end
 end
