@@ -15,7 +15,7 @@ namespace :iiifsi do
 
       directory_errors = []
 
-      if directory.include?('_') # image
+      if directory =~ /_\d{4}$/ # image
         # Some pages may have no text found at all but do have hocr
         if !File.exist?(txt)
           directory_errors << 'txt'

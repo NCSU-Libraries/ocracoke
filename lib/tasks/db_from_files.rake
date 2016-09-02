@@ -16,7 +16,7 @@ namespace :iiifsi do
       resource_identifier = basename.split('_').first
       resource = Resource.find_or_create_by(identifier: resource_identifier)
 
-      if directory.include?('_') # image
+      if directory =~ /_\d{4}$/ # image
         image = Image.find_or_create_by(identifier: basename)
         image.resource = resource
 
