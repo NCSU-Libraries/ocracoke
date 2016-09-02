@@ -19,8 +19,9 @@ class WordBoundariesCreator
 
       title = span['title']
       info = parse_hocr_title(title)
-      text.split('-').each do |word_part|
-        json[word_part] ||= []        
+
+      text.split(/\W/).each do |word_part|
+        json[word_part] ||= []
         json[word_part] << info
       end
     end
