@@ -14,7 +14,8 @@ class PdfCreatorJob < ApplicationJob
         # TODO: Ping another service to let it know it is complete
       else
         puts "Failed PdfCreatorJob #{resource}"
-        PdfCreatorJob.set(wait: 10.minutes).perform_later resource, images, percentage
+        raise "Failed PdfCreatorJob #{resource}"
+        # PdfCreatorJob.set(wait: 10.minutes).perform_later resource, images, percentage
       end
     else
       # Sometimes files haven't been processed or finished writing yet so we
