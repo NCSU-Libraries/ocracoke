@@ -9,6 +9,18 @@ class Resource < ApplicationRecord
     OcrTxtConcatenator.new(identifier, image_identifiers).concatenate
   end
 
+  def index_images
+    images.each do |image|
+      image.index
+    end
+  end
+
+  def word_boundaries_images
+    images.each do |image|
+      image.create_word_boundaries
+    end
+  end
+
   def queue_pdf_job
     PdfCreatorJob.perform_later identifier, image_identifiers
   end

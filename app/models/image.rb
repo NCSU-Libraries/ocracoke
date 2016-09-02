@@ -1,7 +1,7 @@
 class Image < ApplicationRecord
   belongs_to :resource
 
-  def solr_index
+  def index
     indexer = OcrIndexer.new(resource: resource.identifier, image: identifier)
     indexer.index
   end
