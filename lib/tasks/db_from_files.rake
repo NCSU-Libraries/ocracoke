@@ -22,25 +22,25 @@ namespace :iiifsi do
 
         # Some pages may have no text found at all but do have hocr
         if File.exist?(txt)
-          image.txt = DateTime.now
+          image.txt = File.mtime(txt)
         end
         # Check for hocr & json
         if File.size?(hocr)
-          image.hocr = DateTime.now
+          image.hocr = File.mtime(hocr)
         end
         if File.size?(json)
-          image.json = DateTime.now
+          image.json = File.mtime(json)
         end
         image.save
 
       else # we have a resource
         # We would expect at least one page to have text
         if File.size?(txt)
-          resource.txt = DateTime.now
+          resource.txt = File.mtime(txt)
         end
         # Check for PDF
         if File.size?(pdf)
-          resource.pdf = DateTime.now
+          resource.pdf = File.mtime(pdf)
         end
         resource.save
       end
