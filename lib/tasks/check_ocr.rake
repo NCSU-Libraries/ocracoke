@@ -17,7 +17,7 @@ namespace :iiifsi do
 
       if directory.include?('_') # image
         # Some pages may have no text found at all but do have hocr
-        if !File.exist?(txt) 
+        if !File.exist?(txt)
           directory_errors << 'txt'
         end
         # Check for hocr & json
@@ -26,6 +26,10 @@ namespace :iiifsi do
         end
         if !File.size?(json)
           directory_errors << 'json'
+        end
+        # delete any PDFs for images while we're at it
+        if File.exist?(pdf)
+          FileUtils.rm pdf
         end
 
       else # we have a resource
