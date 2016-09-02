@@ -8,6 +8,11 @@
   vars:
     project_name: ocr
     ruby_version: ruby-2.3.1
+  pre_tasks:
+    - yum:
+        pkg: "mysql-devel"
+        state: present
+        update_cache: yes
   roles:
     - role: basic-setup
     - role: dev-dummy-cert
@@ -25,6 +30,10 @@
     - role: rvm-setup
       users:
         - vagrant
+    - role: mariadb
+      databases:
+        - "{{project_name}}"
+        - "{{project_name}}_test"
     - role: passenger-apache
       ruby: "{{ ruby_version }}"
       apache_virtualhost_lines:

@@ -26,7 +26,7 @@ class OcrIndexer
       solr = RSolr.connect url: Rails.configuration.iiifsi['solr_url']
       add = solr.add page
       # TODO: don't update image indexed data unless the add was successful
-      i = Image.find_by identifier: image
+      i = Image.find_by identifier: @image
       i.indexed = DateTime.now
       i.save
 

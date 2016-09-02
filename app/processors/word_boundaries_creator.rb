@@ -34,7 +34,7 @@ class WordBoundariesCreator
   end
 
   def preconditions_met?
-    json_exists?
+    hocr_exists?
   end
 
   def hocr_exists?
