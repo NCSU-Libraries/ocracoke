@@ -26,12 +26,17 @@
       <str name="dir">${solr.ulog.dir:}</str>
       <int name="numVersionBuckets">${solr.ulog.numVersionBuckets:65536}</int>
     </updateLog>
+    <!-- Read: https://lucidworks.com/blog/2013/08/23/understanding-transaction-logs-softcommit-and-commit-in-sorlcloud/ -->
     <autoCommit>
-     <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
+     <!-- Wait 15 seconds or 1000 docs before hard commit. Documents get written to the tlog even before this. -->
+     <maxTime>15000</maxTime>
+     <maxDocs>1000</maxDocs>
      <openSearcher>false</openSearcher>
     </autoCommit>
     <autoSoftCommit>
-     <maxTime>${solr.autoSoftCommit.maxTime:-1}</maxTime>
+      <!-- Turn on soft commits for a long period. These will
+    make stuff visible in the searcher without having to open a new searcher on any hard commits. -->
+     <maxTime>60000</maxTime>
     </autoSoftCommit>
   </updateHandler>
 
