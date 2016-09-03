@@ -94,6 +94,8 @@ GEM
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
+    nokogiri-pretty (0.1.0)
+      nokogiri
     pkg-config (1.1.7)
     puma (3.6.0)
     rack (2.0.1)
@@ -215,6 +217,7 @@ DEPENDENCIES
   jquery-rails
   listen (~> 3.0.5)
   mysql2
+  nokogiri-pretty
   puma (~> 3.0)
   rails (~> 5.0.0)
   resque
@@ -230,6 +233,9 @@ DEPENDENCIES
   tzinfo-data
   uglifier (>= 1.3.0)
   web-console
+
+RUBY VERSION
+   ruby 2.3.1p112
 
 BUNDLED WITH
    1.12.5
