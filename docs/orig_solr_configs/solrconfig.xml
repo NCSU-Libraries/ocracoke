@@ -493,7 +493,6 @@
     </arr>
 </requestHandler>
 
-<!-- This suggest component is not used. It would only be good to retrieve ids or resource identifiers in our case. -->
   <searchComponent name="suggest" class="solr.SuggestComponent">
     <lst name="suggester">
       <str name="name">suggester</str>
@@ -507,10 +506,11 @@
       <!-- <str name="weightField">weightField_fs</str> -->
       <str name="contextField">resource_context_field</str>
       <str name="suggestAnalyzerFieldType">suggest</str>
-      <!-- FIXME: This should not be done on startup or commit! -->
-      <str name="buildOnCommit">true</str>
+      <!-- Building the suggester takes a lot of time.
+           This should not be done on startup or commit! -->
+      <str name="buildOnCommit">false</str>
       <str name="buildOnOptimize">true</str>
-      <str name="buildOnStartup">true</str>
+      <str name="buildOnStartup">false</str>
     </lst>
   </searchComponent>
 
