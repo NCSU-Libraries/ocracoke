@@ -6,5 +6,9 @@ namespace :iiifsi do
       puts solr.commit
     end
 
+    task reindex: :environment do |t|
+      Image.all.each {|image| image.queue_index_job }
+    end
+
   end
 end
