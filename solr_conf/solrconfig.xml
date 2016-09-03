@@ -120,9 +120,9 @@
       <str name="contextField">resource_context_field</str>
       <str name="suggestAnalyzerFieldType">suggest</str>
       <!-- FIXME: This should not be done on startup or commit! -->
-      <str name="buildOnCommit">true</str>
+      <str name="buildOnCommit">false</str>
       <str name="buildOnOptimize">true</str>
-      <str name="buildOnStartup">true</str>
+      <str name="buildOnStartup">false</str>
     </lst>
   </searchComponent>
 
