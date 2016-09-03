@@ -71,7 +71,7 @@
     <field name="id" stored="true" type="string" multiValued="false" indexed="true"/>
 
     <!-- Added for iiifsi -->
-    <field name="resource" stored="true" type="string" multiValued="false" indexed="true"/>
+    <field name="resource" stored="true" type="string" multiValued="true" indexed="true"/>
     <field name="resource_context_field" type="string" indexed="true" stored="true" multiValued="false"/>
     <!-- <copyField source="resource" dest="resource_facet" /> -->
 
