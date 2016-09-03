@@ -25,3 +25,8 @@
 
 # imdone-atom
 .imdone
+
+# In order for Passenger within Vagrant to see the gems we install the bundle
+# with: bundle install --path vendor/cache
+/vendor/cache/ruby
+/vendor/cache/*.gem
