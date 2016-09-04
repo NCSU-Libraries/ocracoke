@@ -35,7 +35,7 @@ namespace :resque do
     when 'staging'
       3 #FIXME: May use less workers in staging in the future.
     when 'production'
-      3
+      4
     else
       1
     end
