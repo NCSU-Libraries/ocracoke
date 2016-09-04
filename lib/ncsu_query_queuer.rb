@@ -8,16 +8,20 @@ class NcsuQueryQueuer
     # get the first page of results to find total_pages
     response = get_technician_results_for_page
     total_pages = response['response']['pages']['total_pages']
-
+    puts "total pages: #{total_pages}"
     # Yes, there's a duplicate request for the first page here, but this is a bit
     # simpler.
     total_pages.times do |page|
       response = get_technician_results_for_page(page: page+1)
       puts page + 1
       response['response']['docs'].each do |doc|
-        resource = doc['id']
-        images = doc['jp2_filenames_sms']
-        ResourceOcrJob.perform_later resource, images
+        resource_id = doc['id']
+        image_ids = doc['jp2_filenames_sms']
+        resource = Resource.find_or_create_by identifier: resource_id
+        image_ids.each do |image_id|
+          Image.find_or_create_by identifier: image_id, resource: resource
+        end
+        ResourceOcrJob.perform_later resource_id, image_ids
       end
     end
   end
