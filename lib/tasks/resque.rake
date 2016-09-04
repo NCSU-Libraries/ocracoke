@@ -33,9 +33,9 @@ namespace :resque do
   task :start_workers => :environment do
     number_of_workers = case Rails.env
     when 'staging'
-      4 #FIXME: May use less workers in staging in the future.
+      3 #FIXME: May use less workers in staging in the future.
     when 'production'
-      4
+      3
     else
       1
     end
@@ -44,7 +44,7 @@ namespace :resque do
     # queue is not run. resque-scheduler-web doesn't work.
     # TODO: Figure out how to automatically run delayed jobs.
     queue = 'ocr,word_boundaries,index,concatenate_txt,pdf,delayed,resource_ocr'
-    queue = 'resource_ocr,ocr,word_boundaries,index,concatenate_txt,pdf,delayed'
+    # queue = 'resource_ocr,ocr,word_boundaries,index,concatenate_txt,pdf,delayed'
     run_worker(queue, number_of_workers)
   end
 
