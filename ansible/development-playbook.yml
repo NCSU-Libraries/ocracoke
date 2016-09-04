@@ -36,6 +36,7 @@
         - "{{project_name}}_test"
     - role: passenger-apache
       ruby: "{{ ruby_version }}"
+      passenger_max_pool_size: 1
       apache_virtualhost_lines:
         - Header set Access-Control-Allow-Origin "*"
     - role: geerlingguy.redis

@@ -5,6 +5,8 @@
   RewriteRule ^/(.*)$ https://%{SERVER_NAME}/$1 [L,R,NE]
 </VirtualHost>
 
+PassengerMaxPoolSize {{ passenger_max_pool_size}}
+
 <VirtualHost *:443>
    ServerName {{ web_server_name }}
    SSLEngine on
@@ -15,15 +17,18 @@
    SSLCertificateFile /etc/pki/tls/certs/{{ web_server_name }}.cert
    SSLCertificateKeyFile /etc/pki/tls/certs/{{ web_server_name }}.key
 
-   {% for line in apache_virtualhost_lines %}
-    {{ line }}
-   {% endfor %}
+   {% if apache_virtualhost_lines %}
+     {% for line in apache_virtualhost_lines %}
+       {{ line }}
+     {% endfor %}
+   {% endif %}
 
    # Be sure to point to 'public'!
    DocumentRoot /opt/{{project_name}}/current/public
    <Directory /opt/{{project_name}}/current/public>
       RackEnv {{passenger_app_env}}
       PassengerRuby /usr/local/rvm/gems/{{ruby}}/wrappers/ruby
+      PassengerMinInstances {{ passenger_min_instances }}
       # Relax Apache security settings
       AllowOverride all
       Options FollowSymLinks
@@ -31,4 +36,11 @@
       # MultiViews must be turned off
       Options -MultiViews
    </Directory>
+
+   <FilesMatch "\.json">
+        SetEnvIf Accept "application/ld\+json" WANTS_jsonld
+        Header set Content-Type "application/ld+json" env=WANTS_jsonld
+        Header append Link '<http://iiif.io/api/image/2/context.json>;rel="http://www.w3.org/ns/json-ld#context";type="application/ld+json"' env=!WANTS_jsonld
+    </FilesMatch>
+
 </VirtualHost>
