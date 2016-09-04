@@ -10,7 +10,7 @@ class WordBoundariesJob < ApplicationJob
       word_boundaries_creator.create
     else
       puts "WordBoundariesJob: Preconditions not met #{image}"
-      WordBoundariesJob.set(wait: 10.minutes).perform_later image
+      WordBoundariesJob.set(wait: 5.minutes).perform_later image
     end
   end
 end

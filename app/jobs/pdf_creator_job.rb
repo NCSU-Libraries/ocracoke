@@ -21,7 +21,7 @@ class PdfCreatorJob < ApplicationJob
       # Sometimes files haven't been processed or finished writing yet so we
       # just delay this for a time until it can be added back into its queue.
       puts "PdfCreatorJob: Preconditions not met #{resource}"
-      PdfCreatorJob.set(wait: 10.minutes).perform_later resource, images, percentage
+      PdfCreatorJob.set(wait: 5.minutes).perform_later resource, images, percentage
     end
   end
 

@@ -15,7 +15,7 @@ class ConcatenateOcrTxtJob < ApplicationJob
       # Sometimes files haven't been processed or finished writing yet so we
       # just delay this for a time until it can be added back into its queue.
       puts "ConcatenateOcrTxtJob: Preconditions not met #{resource}"
-      ConcatenateOcrTxtJob.set(wait: 10.minutes).perform_later resource, images
+      ConcatenateOcrTxtJob.set(wait: 5.minutes).perform_later resource, images
     end
   end
 
