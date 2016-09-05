@@ -18,6 +18,6 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-every :sunday, at: '4 am' do
+every :day, at: '4 am' do
   rake 'iiifsi:solr:optimize', output: { error: '~/iiifsi-solr-optimize-error.log', standard: '~/iiifsi-solr-optimize-standard.log'}
 end
