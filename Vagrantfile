@@ -22,7 +22,7 @@ Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.linked_clone = true
     vb.memory = 1024
-    vb.cpus = 2
+    vb.cpus = 1
   end
 
   config.vm.provision "ansible" do |ansible|

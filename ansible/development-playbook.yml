@@ -23,6 +23,9 @@
         - 80
         - 3000
         - 8983
+    - role: franklinkim.environment
+      environment_config:
+        RAILS_ENV: "{{ passenger_app_env }}"
     - role: ocr
     - role: rvm_io.rvm1-ruby
       rvm1_rubies:

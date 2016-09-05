@@ -4,9 +4,9 @@ Rails.application.routes.draw do
 
   get '/search/:id', to: 'search#search', as: :search
 
-  # FIXME: Autocomplete is a dummy route right now that just returns 200 OK
-  #        so that UV works.
   get '/suggest/:id', to: 'suggest#suggest', as: :suggest
+
+  get '/about', to: 'about#about', as: :about
 
   mount ResqueWeb::Engine => "/jobs"
 
