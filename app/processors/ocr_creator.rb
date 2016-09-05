@@ -31,7 +31,7 @@ class OcrCreator
       tmp_download_image.binmode
       # get image via IIIF with httpclient
       puts "Getting #{@identifier} #{url}"
-      response = @http_client.get url
+      response = @http_client.get url, follow_redirect: true
       # write image to tempfile
       tmp_download_image.write response.body
 

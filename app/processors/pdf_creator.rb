@@ -37,7 +37,7 @@ class PdfCreator
     @images.each do |image|
       url = IiifUrl.from_params url_params(image)
       puts "PdfCreator downloading #{url}"
-      response = http_client.get url
+      response = http_client.get url, follow_redirect: true
       tmp_download_image = Tempfile.new([image, ".jpg"])
       File.open(tmp_download_image.path, 'w') do |fh|
         fh.binmode
