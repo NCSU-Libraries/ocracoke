@@ -12,6 +12,7 @@ gem 'sinatra', '2.0.0.beta2'
 gem 'mysql2'
 gem 'nokogiri-pretty'
 gem 'dotenv-rails'
+gem 'whenever', require: false
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0'
