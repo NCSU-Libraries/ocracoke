@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   get '/about', to: 'about#about', as: :about
 
+  post '/api/ocr_resource'
+
   mount ResqueWeb::Engine => "/jobs"
 
 end
