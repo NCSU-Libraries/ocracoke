@@ -33,7 +33,7 @@ namespace :resque do
   task :start_workers => :environment do
     number_of_workers = case Rails.env
     when 'staging'
-      2 
+      2
     when 'production'
       3
     else
@@ -43,7 +43,7 @@ namespace :resque do
     # Note: A concatenate job may go into the 'delayed' queue. By default this
     # queue is not run. resque-scheduler-web doesn't work.
     # TODO: Figure out how to automatically run delayed jobs.
-    queue = 'ocr,word_boundaries,index,concatenate_txt,pdf,delayed,resource_ocr'
+    queue = 'ocr,word_boundaries,index,concatenate_txt,pdf,delayed,notification,resource_ocr'
     # queue = 'resource_ocr,ocr,word_boundaries,index,concatenate_txt,pdf,delayed'
     run_worker(queue, number_of_workers)
   end

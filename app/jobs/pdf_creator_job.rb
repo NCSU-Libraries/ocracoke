@@ -12,6 +12,7 @@ class PdfCreatorJob < ApplicationJob
       if pc.pdf_exists?
         puts "Done PdfCreatorJob: #{resource}"
         # TODO: Ping another service to let it know it is complete
+        NotificationJob.perform_later resource
       else
         puts "Failed PdfCreatorJob #{resource}"
         raise "Failed PdfCreatorJob #{resource}"

@@ -2,3 +2,6 @@ development:
   ocr_directory: /access-images/ocr/
   iiif_base_url: https://iiif-staging01.lib.ncsu.edu/iiif
   solr_url: http://localhost:8983/solr/iiifsi
+  notification:
+    url: http://<%= `netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10`.chomp %>:3000/api_incoming/ocr
+    token: token_for_ocr_app
