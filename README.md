@@ -1,6 +1,20 @@
 # Ocracoke
 
-Rails application to create, index, and search page text and provide results in [IIIF Content Search API](http://iiif.io/api/search/) format. The application can OCR for indexing content using a IIIF Image server for source images.
+Rails application to create, index, and search text from page images and provide results in [IIIF Content Search API](http://iiif.io/api/search/) format.
+
+## Features
+
+- OCR page images for indexing content.
+- Uses a IIIF Image server for source images.
+- Resque queue for OCR and processing jobs.
+- Provides bounding boxes for hit highlighting.
+- Search suggestions.
+
+## Status
+
+This code is being used in production at NCSU Libraries for [full text resources](http://d.lib.ncsu.edu/collections/catalog?f%5Bfulltext_bs%5D%5B%5D=true) on our Rare & Unique Digital Collections site. It was developed quickly to be able to provide improved access to the [Nubian Message](http://d.lib.ncsu.edu/collections/catalog?f%5Bispartof_facet%5D%5B%5D=Nubian+Message) student newspaper.
+
+The code lacks tests and we have not had much time for feedback on the search experience from users. The suggester could certainly be improved.
 
 ## Quick start
 
@@ -28,8 +42,7 @@ bin/rake db:migrate
 bin/rails s -b 0.0.0.0
 ```
 
-On the host visit Rails: <http://localhost:8090/jobs>
-You should see the the Resque jobs page.
+On the host visit Rails: <http://localhost:8090/jobs>. This route is protected with HTTP Basic Auth. Look in the `.env` file for the credentials. You should see the Resque jobs page.
 
 ### OCR a Resource
 
@@ -193,8 +206,30 @@ This API is currently under development and it only POSTs the resource identifie
 
 In the included `./config/ocracoke.yml` file notifications are turned off. An example is given of how to send a notification to the host machine on port 3000 to the ``/api_incoming/ocr` path.
 
+## Delivering OCR
+
+It is easy to deliver all of the OCR text and PDFs. One way is to just link the ocr directory into your public directory:
+
+`ln -s /access-images/ocr /vagrant/public/ocr`
+
+Now visit this page in your browser to download the OCR text for the resource:
+<https://localhost:8443/ocr/LD/LD3928-A23-1947/LD3928-A23-1947.txt>
+
+## Deployment
+
+Take a look at the ansible directory for a playbook/recipe for provisioning a machine for this application. All the required dependencies are listed there.
+
+We deploy updates to the application with Capistrano and could share a recipe with you. Main points are that you will want to create your own versions of various configuration files and link to them on deploy rather than using the (insecure) versions that are under version control for development. They all contain configuration or secrets that you must changes.
+
+- api_tokens.yml
+- database.yml
+- ocracoke.yml
+- secrets.yml
+- .env (or include .env.production that overrides .env)
+
 ## TODO
 
+- #TODO:0 Tests
 - #TODO:10 Allow the JSON word boundary file to include x, y, w, h values instead of the hOCR x0, y0, x1, y1 values and work either way.
 
 ## Ocracoke, North Carolina
