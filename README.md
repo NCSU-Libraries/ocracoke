@@ -197,6 +197,10 @@ In the included `./config/ocracoke.yml` file notifications are turned off. An ex
 
 - #TODO:10 Allow the JSON word boundary file to include x, y, w, h values instead of the hOCR x0, y0, x1, y1 values and work either way.
 
+## Ocracoke, North Carolina
+
+<https://en.wikipedia.org/wiki/Ocracoke,_North_Carolina>
+
 ## Authors
 
 - Jason Ronallo
