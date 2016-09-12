@@ -1,14 +1,14 @@
-namespace :iiifsi do
+namespace :ocracoke do
   namespace :solr do
     desc 'commit solr'
     task commit: :environment do |t|
-      solr = RSolr.connect url: Rails.configuration.iiifsi['solr_url']
+      solr = RSolr.connect url: Rails.configuration.ocracoke['solr_url']
       puts solr.commit
     end
 
-    desc 'optimize solr'
+    desc 'optimize solr (also builds suggester)'
     task optimize: :environment do |t|
-      solr = RSolr.connect url: Rails.configuration.iiifsi['solr_url']
+      solr = RSolr.connect url: Rails.configuration.ocracoke['solr_url']
       puts solr.optimize
     end
 

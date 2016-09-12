@@ -35,7 +35,7 @@ class Notifier
   end
 
   def notification_config
-    Rails.configuration.iiifsi['notification']
+    Rails.configuration.ocracoke['notification']
   end
 
 

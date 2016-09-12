@@ -1,14 +1,15 @@
 class SuggestController < ApplicationController
 
   def suggest
-    solr = RSolr.connect url: 'http://localhost:8983/solr/iiifsi'
+    solr = RSolr.connect url: Rails.configuration.ocracoke['solr_url']
     solr_params = {
       'suggest.q' => params[:q],
       # Filter the results to the context of the resource.
       # It is necessary to remove the dashes. If we try to store the resource identifier with dashes then we fail to get the results we expect. Solr does something we don't want it to with the value of this parameter when it has a dash.
       'suggest.cfq' => params[:id].gsub('-','_')
     }
-    @response = solr.get '/solr/iiifsi/suggest', params: solr_params
+    # FIXME:iiifsi
+    @response = solr.get 'suggest', params: solr_params
     suggester = @response['suggest']['suggester']
     suggestion_words = suggester.keys
     terms = suggestion_words.map do |suggestion_word|

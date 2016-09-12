@@ -1,54 +1,79 @@
-# IIIF Search Inside
+# Ocracoke
 
 Application to create, index, and search page text and provide results in [IIIF Content Search API](http://iiif.io/api/search/) format. Tasks are provided to use a IIIF Image server to OCR and index page text.
 
 ## Quick start
 
 ### Vagrant
-Check out the code. Development is done in Vagrant. Start vagrant:
+
+Development is done in Vagrant. Check out the code.  Start vagrant:
 
 ```sh
 vagrant up
 ```
 
-On the host visit Solr at <http://localhost:8984>
+While this is installing the appropriate box and provisioning it, you can look through the /ansible directory to get some idea of all the dependencies and how the application gets deployed to a production environment.
 
-SSH to vagrant machine and start Rails:
+### Solr
+On the host visit Solr at <http://localhost:8984>. You should see the "ocracoke" Solr core under "Core Admin."
+
+### Rails
+
+SSH to vagrant machine, migrate the database, and start Rails:
 ```sh
 vagrant ssh
 cd /vagrant
 bundle
+bin/rake db:migrate
 bin/rails s -b 0.0.0.0
 ```
 
-On the host visit Rails: <http://localhost:8090>
-You should see the "Yay! You're on Rails!" page.
+On the host visit Rails: <http://localhost:8090/jobs>
+You should see the the Resque jobs page.
 
-### Create Source File
+### OCR a Resource
 
-First, we need to create a file which includes the identifiers for resources and images. You can see an example of how this is created for NCSU Libraries with the `NcsuFileCreator` class. This uses an API on our public site to gather the needed information. You can give it a try with: `bin/rake iiifsi:create_ncsu`. This will place a JSON file in `tmp/ncsu_source_file.json`.
-
-If you are using the NCSU Libraries task to create the source file you can adjust the path of the outfile and give the URL to use for the query. In this example all of the Technician newspapers from the 1970s that match the query "april 1" are output. This is just a matter of taking a URL from the public site and requesting the JSON version of the query.
+This will show you all the rake tasks available for ocracoke:
 
 ```sh
-bin/rake iiifsi:create_ncsu["./tmp/nsf.json","http://d.lib.ncsu.edu/collections/catalog.json?f[format][]=Text&f[ispartof_facet][]=Technician&f[resource_decade_facet][]=1970s&q=april+1"]
+vagrant ssh
+cd /vagrant
+bin/rake -T ocr
 ```
 
-Source files should be in the format of an array of objects. You can see a simple example in `examples/short_ncsu_source_file.json`. Each object includes two keys `resource` and `images`. The value of `resource` should be a unique identifier for the resource. The value of `images` is an array of the IIIF image identifiers which will be used to retrieve the images from an IIIF Image API server for processing OCR for each image. The `resource` value will be used as the name of the directory to place the concatenated text and PDF from all of the page `images` of the resource. The concatenated PDF can be used to allow downloading a searchable PDF.
+We're going to OCR a single resource from the NCSU Libraries' collection. This is a Commencement program that mentions a graduate from Ocracoke. It also ought to OCR quickly enough.
 
-### Create OCR
+```sh
+bin/rake ocracoke:queue_from_ncsu_id[LD3928-A23-1947]
+```
 
-To create OCR you can run the rake task `iiifsi:create_ocr`. You'll want to use the source file you created in the previous step. If you have your own source file you can pass it in as a parameter to the task: `bin/rake iiifsi:create_ocr[./examples/short_ncsu_source_file.json]`.
+That task will use an NCSU Libraries API to get the list of identifiers for images associated with this resource. You should now see one "resource_ocr" job in the queue. Now we need to run a worker to process the jobs. This is the suggested queue order though you can change it to suit your needs.
 
-To use your own IIIF image server you will want to include the value of your IIIF base URL in `config/iiifsi.yml` for the correct environment.
+```sh
+QUEUE=ocr,word_boundaries,index,concatenate_txt,pdf,delayed,notification,resource_ocr REDO_OCR=true bin/rake resque:work
+```
 
-### Index the OCR
+You should see output on the console that the jobs are working. The Resque web interface will show that one worker is working, and you can see the status of all the queues.
 
-Now that you have created OCR you can index the OCR. Combined OCR will not be indexed. So you only index the page images you'll give the rake task the source file as a parameter again: `bin/rake iiifsi:index_ocr[./examples/short_ncsu_source_file.json]`.
 
-### Search a Resource
 
-Now that you have indexed the pages of your resources you can search inside them and get a [IIIF Content Search API](http://iiif.io/api/search/) response. If you are using the NCSU Libraries example you can do the following search from the host: <http://localhost:8090/search/technician-v60n1-1980-04-01?q=student>. The search URL follows the pattern `/search/RESOURCE_IDENTIFIER?q=QUERY` and always returns JSON.
+### Search Inside
+
+At this point you ought to be able to see the result for Ocracoke in the search inside results: <http://localhost:8090/search/LD3928-A23-1947?q=ocracoke>
+
+### Suggestions
+
+Suggestions will not work yet until the suggestion dictionary is built. This is a time consuming process so it is something that would be run nightly in a production. You can trigger building the suggester by optimizing the Solr index:
+
+```
+bin/rake ocracoke:solr:optimize
+```
+
+You should now see a suggestion for "ocra" <http://localhost:8090/suggest/LD3928-A23-1947?q=ocra>
+
+## OCRing and Indexing Your Own Content
+
+
 
 ### Use Search Endpoint in a IIIF Presentation Manifest
 
@@ -72,7 +97,7 @@ You can now include the search endpoint in a [IIIF Presentation API](http://iiif
 
 ## Page Text Directory Structure
 
-The `ocr_directory` can be set in `config/iiifsi.yml`. Under the OCR directory are directories for the first two characters of your resource and image identifiers. For instance if one or more identifiers begins with "technician-" then there will be a directory named "te" under the OCR directory. Within will be directories named after each resource and image identifier. In order to use the OCR index script you will need to have within each directory for an image at minimum a text file with the full text of the page and a JSON word boundaries file. If you are not using the provided scripts for indexing, the minimum will be the JSON word boundaries file if you want hits to be highlighted. If creating OCR using the scripts given here you will have already created hOCR with tesseract and a PDF with hocr-tools.
+The `ocr_directory` can be set in `config/ocracoke.yml`. Under the OCR directory are directories for the first two characters of your resource and image identifiers. For instance if one or more identifiers begins with "technician-" then there will be a directory named "te" under the OCR directory. Within will be directories named after each resource and image identifier. In order to use the OCR index script you will need to have within each directory for an image at minimum a text file with the full text of the page and a JSON word boundaries file. If you are not using the provided scripts for indexing, the minimum will be the JSON word boundaries file if you want hits to be highlighted. If creating OCR using the scripts given here you will have already created hOCR with tesseract and a PDF with hocr-tools.
 
 Here's an example directory structure a single resource with a couple of the pages from the resource:
 
@@ -134,13 +159,13 @@ A simple suggester is provided. It currently has some limitations where it can o
 Sometimes when Vagrant starts up it seems the synced file system is not present when Solr start, so it is necessary to restart solr on the guest to pick up the configs:
 
 ```sh
-sudo service solr-iiifsi restart
+sudo service solr-ocracoke restart
 ```
 
 To update the Solr core's configuration you can run this from the host:
 
 ```sh
-curl "http://localhost:8984/solr/admin/cores?action=RELOAD&core=iiifsi"
+curl "http://localhost:8984/solr/admin/cores?action=RELOAD&core=ocracoke"
 ```
 
 ## TODO

@@ -146,7 +146,7 @@
     <!-- *** This field is used by Sunspot! *** -->
     <field name="id" stored="true" type="string" multiValued="false" indexed="true"/>
 
-    <!-- Added for iiifsi -->
+    <!-- Added for ocracoke -->
     <field name="resource" stored="true" type="string" multiValued="false" indexed="true"/>
     <field name="resource_context_field" type="string" indexed="true" stored="true" multiValued="false"/>
     <!-- <copyField source="resource" dest="resource_facet" /> -->

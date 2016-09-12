@@ -1,1 +1,1 @@
-IiifUrl.set_base_url(Rails.configuration.iiifsi['iiif_base_url'])
+IiifUrl.set_base_url(Rails.configuration.ocracoke['iiif_base_url'])

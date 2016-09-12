@@ -1,4 +1,4 @@
-namespace :iiifsi do
+namespace :ocracoke do
 
   desc "resize hocr file"
   task :hocr_resize, [:hocr_path,:percentage,:outfile] => :environment do |t, args|

@@ -32,5 +32,10 @@ Vagrant.configure(2) do |config|
     # ansible.verbose = 'vvvv'
   end
 
+  # Until the patch in 1.8.6 is released do not try to insert ssh key. Or
+  # manually apply the patch here:
+  # https://github.com/mitchellh/vagrant/pull/7611
+  # config.ssh.insert_key = false
+
   config.ssh.forward_agent = true
 end

@@ -1,12 +1,13 @@
 class SearchController < ApplicationController
 
   def search
-    solr = RSolr.connect url: 'http://localhost:8983/solr/iiifsi'
+    solr = RSolr.connect url: Rails.configuration.ocracoke['solr_url']
     solr_params = {
       q: params[:q],
       fq: "resource:#{params[:id]}"
     }
-    @response = solr.get '/solr/iiifsi/search', params: solr_params
+    # FIXME:iiifsi
+    @response = solr.get 'search', params: solr_params
 
     @docs = @response["response"]["docs"].map do |doc|
       doc_hits = @response['highlighting'][doc['id']]['txt']
@@ -22,7 +23,7 @@ class SearchController < ApplicationController
     @pages_json = {}
     first_two_chars = params[:id][0,2]
     @docs.map do |doc|
-      json_file = File.join Rails.configuration.iiifsi['ocr_directory'], first_two_chars, doc['id'], doc['id'] + ".json"
+      json_file = File.join Rails.configuration.ocracoke['ocr_directory'], first_two_chars, doc['id'], doc['id'] + ".json"
       json = File.read json_file
       page_json = JSON.parse(json)
       @pages_json[doc['id']] = page_json
@@ -32,7 +33,7 @@ class SearchController < ApplicationController
     # pick the correct @pages_json word boundary. This compensates for how there
     # could be more than one hit in a snippet.
     @hits_used = {}
-    
+
     request.format = :json
     respond_to :json
   end

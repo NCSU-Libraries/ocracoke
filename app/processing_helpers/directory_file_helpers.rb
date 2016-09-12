@@ -2,7 +2,7 @@ module DirectoryFileHelpers
 
   def directory_for_first_two(id)
     first_two_of_identifier = id.slice(0, 2)
-    File.join Rails.configuration.iiifsi['ocr_directory'], first_two_of_identifier
+    File.join Rails.configuration.ocracoke['ocr_directory'], first_two_of_identifier
   end
 
   def directory_for_identifier(id)

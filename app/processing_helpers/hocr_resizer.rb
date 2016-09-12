@@ -67,4 +67,4 @@ From /vagrant:
 
 wget https://iiif.lib.ncsu.edu/iiif/technician-1977-02-11_0001/full/pct:50/0/default.jpg -O ./tmp/technician-1977-02-11_0001/technician-1977-02-11_0001.jpg
 
-bin/rake iiifsi:hocr_resize[/access-images/ocr/te/technician-1977-02-11_0001/technician-1977-02-11_0001.hocr,50,./tmp/technician-1977-02-11_0001/technician-1977-02-11_0001.hocr] && hocr-pdf ./tmp/technician-1977-02-11_0001 > ./tmp/technician-1977-02-11_0001/technician-1977-02-11_0001.pdf
+bin/rake ocracoke:hocr_resize[/access-images/ocr/te/technician-1977-02-11_0001/technician-1977-02-11_0001.hocr,50,./tmp/technician-1977-02-11_0001/technician-1977-02-11_0001.hocr] && hocr-pdf ./tmp/technician-1977-02-11_0001 > ./tmp/technician-1977-02-11_0001/technician-1977-02-11_0001.pdf

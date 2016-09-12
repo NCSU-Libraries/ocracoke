@@ -23,7 +23,7 @@ class OcrIndexer
         txt: text,
         suggest_txt: suggest_txt
       }
-      solr = RSolr.connect url: Rails.configuration.iiifsi['solr_url']
+      solr = RSolr.connect url: Rails.configuration.ocracoke['solr_url']
       add = solr.add page
       # TODO: don't update image indexed data unless the add was successful
       i = Image.find_by identifier: @image

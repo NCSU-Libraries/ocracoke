@@ -1,4 +1,4 @@
-namespace :iiifsi do
+namespace :ocracoke do
   desc 'interrogate the database for missing pieces and queue needed jobs'
   task queue_missing: :environment do
     # TODO

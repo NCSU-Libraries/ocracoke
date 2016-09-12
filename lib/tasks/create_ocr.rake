@@ -1,4 +1,4 @@
-namespace :iiifsi do
+namespace :ocracoke do
   desc "Create OCR from a file of resource and image identifiers"
   task :create_ocr, [:resources_file] => :environment do |t, args|
     # Script that queries Sal for all Technician newspapers and
@@ -7,7 +7,7 @@ namespace :iiifsi do
 
     resources_file = args[:resources_file]
 
-    lock_file_name = '/tmp/iiifsi_create_ocr.lock'
+    lock_file_name = '/tmp/ocracoke_create_ocr.lock'
 
     # If the lock file does not exist we create it.
     unless File.exist?(lock_file_name)

@@ -3,7 +3,7 @@
   <luceneMatchVersion>6.1.0</luceneMatchVersion>
   <dataDir>${solr.data.dir:}</dataDir>
 
-  <!-- Added for iiifsi so that schema.xml does not get managed by Solr.  -->
+  <!-- Added for ocracoke so that schema.xml does not get managed by Solr.  -->
   <schemaFactory class="ClassicIndexSchemaFactory"/>
 
   <directoryFactory name="DirectoryFactory"

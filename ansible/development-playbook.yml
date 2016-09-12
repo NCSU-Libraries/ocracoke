@@ -1,5 +1,5 @@
 ---
-- hosts: iiifsi
+- hosts: ocracoke
   become: yes
   become_method: sudo
   become_user: root
@@ -49,10 +49,10 @@
     - role: solr
       version: 6.1.0
       port: 8983
-      service_name: solr-iiifsi
+      service_name: solr-ocracoke
       confdir: /vagrant/solr_conf
       cores:
-        - iiifsi
+        - ocracoke
       group: vagrant
   post_tasks:
     # These post_tasks are to create the same directories as exist on the

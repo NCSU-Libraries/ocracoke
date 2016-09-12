@@ -1,8 +1,8 @@
-namespace :iiifsi do
+namespace :ocracoke do
   # TODO: this is possibly a temporary script
   desc 'seed the database with information from the files on the filesystem'
   task :db_from_files => :environment do
-    directory_glob = File.join Rails.configuration.iiifsi['ocr_directory'], '*/*'
+    directory_glob = File.join Rails.configuration.ocracoke['ocr_directory'], '*/*'
     Dir.glob(directory_glob).each do |directory|
       # This only works in the case when images have an underscore and resources don't
       basename = File.basename directory

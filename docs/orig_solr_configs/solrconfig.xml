@@ -62,7 +62,7 @@
        persistent, and doesn't work with replication.
     -->
 
-  <!-- Added for iiifsi  -->
+  <!-- Added for ocracoke  -->
   <schemaFactory class="ClassicIndexSchemaFactory"/>
 
   <directoryFactory name="DirectoryFactory"

@@ -1,9 +1,9 @@
-namespace :iiifsi do
+namespace :ocracoke do
   desc "Index all the OCR into Solr"
   task :index_ocr, [:resources_file] => :environment do |t, args|
     include DirectoryFileHelpers
 
-    solr = RSolr.connect url: Rails.configuration.iiifsi['solr_url']
+    solr = RSolr.connect url: Rails.configuration.ocracoke['solr_url']
 
     # TODO: Allow for skipping over errors instead of failing on them
     begin
