@@ -24,9 +24,14 @@ class HocrResizer
           y1 = (match_data[4].to_i * @pct).round
           # byebug
           "bbox #{x0} #{y0} #{x1} #{y1}"
+        elsif title_part.include?('baseline')
+          # https://github.com/tesseract-ocr/tesseract/wiki/FAQ#how-to-interpret-hocr-baseline-output
+          b, slope, constant_term = title_part.split(' ')
+          slope = slope.to_f
+          constant_term = constant_term.to_f * @pct
+          "baseline #{slope} #{constant_term}"
         else
           # Style the same.
-          # baseline stays the same: https://github.com/tesseract-ocr/tesseract/wiki/FAQ#how-to-interpret-hocr-baseline-output
           title_part
         end
       end
