@@ -38,6 +38,7 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    addressable (2.4.0)
     arel (7.1.1)
     builder (3.2.2)
     byebug (9.0.5)
@@ -216,6 +217,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   byebug
   coffee-rails (~> 4.2)
   dotenv-rails
@@ -227,7 +229,7 @@ DEPENDENCIES
   mysql2
   nokogiri-pretty
   puma (~> 3.0)
-  rails (~> 5.0.0)
+  rails (~> 5.0.0, >= 5.0.0.1)
   resque
   resque-scheduler
   resque-scheduler-web
@@ -247,4 +249,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.12.5
+   1.13.1

@@ -192,11 +192,7 @@ Sometimes when Vagrant starts up it seems the synced file system is not present 
 sudo service solr-ocracoke restart
 ```
 
-To update the Solr core's configuration you can run this from the host:
-
-```sh
-curl "http://localhost:8984/solr/admin/cores?action=RELOAD&core=ocracoke"
-```
+(Note that there is a bug in Solr 6 where the RELOAD action via the HTTP API fails because of a bug in the particular Suggester implementation used.)
 
 ## Notifications
 

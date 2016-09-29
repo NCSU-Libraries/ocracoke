@@ -6,8 +6,9 @@ module SearchHelper
   end
 
   def manifest_image_api_id(id)
-    # File.join IiifUrl.base_url, id
-    File.join IiifUrl.base_url, id
+    template_string = Rails.configuration.ocracoke['canvas_url_template']
+    template = Addressable::Template.new template_string
+    template.expand(id: id).to_s
   end
 
 end

@@ -1,6 +1,7 @@
 development:
   ocr_directory: /access-images/ocr/
   iiif_base_url: https://iiif-staging01.lib.ncsu.edu/iiif
+  canvas_url_template: "https://scrc.lib.ncsu.edu/sal_staging/canvas/{id}"
   solr_url: http://localhost:8983/solr/ocracoke
   notification: false
     # url: http://<%= `netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10`.chomp %>:3000/api_incoming/ocr

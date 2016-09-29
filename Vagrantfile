@@ -9,6 +9,9 @@ Vagrant.configure(2) do |config|
   # using a specific IP.
   config.vm.network "private_network", ip: "192.168.33.30"
 
+  config.vm.synced_folder '.', '/vagrant', type: 'nfs', mount_options: ['nolock']
+  # :mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
+
   config.vm.network "forwarded_port", guest: 80, host: 8088,
       auto_correct: true
   config.vm.network "forwarded_port", guest: 443, host: 8443,
@@ -44,11 +47,17 @@ Vagrant.configure(2) do |config|
     run "#{File.dirname(__FILE__)}/get-ports.sh #{@machine.id}"
   end
 
-
   # Until the patch in 1.8.6 is released do not try to insert ssh key. Or
   # manually apply the patch here:
   # https://github.com/mitchellh/vagrant/pull/7611
   # config.ssh.insert_key = false
+
+  # set auto_update to false, if you do NOT want to check the correct
+  # additions version when booting this machine
+  config.vbguest.auto_update = true
+
+  # do NOT download the iso file from a webserver
+  config.vbguest.no_remote = false
 
   config.ssh.forward_agent = true
 end
