@@ -11,7 +11,7 @@ class NotificationJob < ApplicationJob
         puts "NotificationJob: complete #{resource}"
       else
         puts "NotificationJob: fail #{resource}"
-        raise "NotificationJob response not 200 OK"
+        raise "NotificationJob response not 200 OK. #{response.body}"
       end
     else
       NotificationJob.set(wait: 10.minutes).perform_later(resource)
