@@ -2,6 +2,7 @@ development:
   ocr_directory: /access-images/ocr/
   iiif_base_url: https://iiif-staging01.lib.ncsu.edu/iiif
   canvas_url_template: "http://scrc.lib.ncsu.edu/sal_staging/canvas/{id}"
+  annotation_list_template: "https://ocr.lib.ncsu.edu/ocr/{first_two}/{id}/{id}-annotation-list.json"
   solr_url: http://localhost:8983/solr/ocracoke
   notification: false
     # url: http://<%= `netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10`.chomp %>:3000/api_incoming/ocr
