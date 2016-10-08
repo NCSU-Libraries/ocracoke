@@ -5,9 +5,6 @@ namespace :ocracoke do
     hr = HocrOpenAnnotationCreator.new File.expand_path(args[:hocr_path])
     annotations = hr.annotation_list
     puts annotations.to_json
-    # File.open(File.expand_path(args[:outfile]), 'w') do |fh|
-    #   fh.puts annotations.to_json
-    # end
   end
 
 end

@@ -27,4 +27,4 @@ end
 # FIXME: How to make this so it is possible to have different canvas URLs to
 #        match each institution's own URLs to canvases as found in their
 #        Presentation manifests?
-json.on manifest_image_api_id(doc[:id]) + "#xywh=#{xywh}"
+json.on manifest_canvas_on_xywh(doc[:id], xywh) #manifest_canvas_id(doc[:id]) + "#xywh=#{xywh}"
