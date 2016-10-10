@@ -17,8 +17,12 @@ class HocrOpenAnnotationCreator
     }
   end
 
+  def annotation_list_id_base
+    File.join Rails.configuration.ocracoke['ocracoke_base_url'], @first_two, @identifier, @identifier + '-annotation-list'
+  end
+
   def annotation_list_id
-    File.join Rails.configuration.ocracoke['ocracoke_base_url'], @first_two, @identifier, @identifier + '-annotation-list.json'
+    annotation_list_id_base + '.json'
   end
 
   def resources
@@ -47,6 +51,7 @@ class HocrOpenAnnotationCreator
 
   def annotation(chars, xywh)
     {
+      :"@id" => annotation_id(xywh),
       :"@type" => "oa:Annotation",
       motivation: "sc:painting",
       resource: {
@@ -57,6 +62,10 @@ class HocrOpenAnnotationCreator
       # TODO: use canvas_url_template
       on: on_canvas(xywh)
     }
+  end
+
+  def annotation_id(xywh)
+    File.join annotation_list_id_base, xywh
   end
 
   def on_canvas(xywh)
