@@ -24,6 +24,9 @@ module DirectoryFileHelpers
   def final_json_file_filepath(id)
     final_output_base_filepath(id) + '.json'
   end
+  def final_annotation_list_filepath(id)
+    final_output_base_filepath(id) + '-annotation-list.json'
+  end
 
   # Temporary filepaths
   def temporary_directory_for_identifier(id)
@@ -56,6 +59,10 @@ module DirectoryFileHelpers
 
   def pdf_already_exists?(id)
     File.size?(final_pdf_filepath(id))
+  end
+
+  def annotation_list_already_exists?(id)
+    File.size?(final_annotation_list_filepath(id))
   end
 
 end

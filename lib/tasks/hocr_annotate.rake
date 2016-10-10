@@ -14,14 +14,8 @@ namespace :ocracoke do
       # This only works in the case when images have an underscore and resources don't
       basename = File.basename directory
       hocr = File.join directory, basename + '.hocr'
-      outfile = File.join directory, basename + '-annotation-list.json'
-      if File.exist?(hocr) && !File.exist?(outfile)
-        puts hocr
-        hr = HocrOpenAnnotationCreator.new File.expand_path(hocr)
-        annotations = hr.annotation_list
-        File.open(outfile, 'w') do |fh|
-          fh.puts annotations.to_json
-        end
+      if File.exist?(hocr)
+        AnnotationListJob.perform_later basename
       end
     end
   end

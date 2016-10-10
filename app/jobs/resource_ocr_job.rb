@@ -8,6 +8,7 @@ class ResourceOcrJob < ApplicationJob
     images.each do |image|
       Image.find_or_create_by(identifier: image, resource: r)
       OcrJob.perform_later image, resource
+      AnnotationListJob.perform_later image
     end
     ConcatenateOcrTxtJob.perform_later resource, images
     PdfCreatorJob.perform_later resource, images, 50

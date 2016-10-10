@@ -21,10 +21,6 @@ class HocrOpenAnnotationCreator
     File.join Rails.configuration.ocracoke['ocracoke_base_url'], @first_two, @identifier, @identifier + '-annotation-list.json'
   end
 
-  def method
-    #code
-  end
-
   def resources
     @hocr.xpath(".//*[contains(@class, 'ocr_line')]").map do |line|
       text = line.text().gsub("\n", ' ').squeeze(' ').strip
