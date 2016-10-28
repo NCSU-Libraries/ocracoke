@@ -1,17 +1,11 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-if ENV['VAGRANT_PLUGINS_UPDATED']=='true'
-   alreadyUpdated = 'true'
-end
-required_plugins = %s(vagrant-vbguest vagrant-triggers)
-if alreadyUpdated != 'true' && (ARGV[0] == "up" || ARGV[0] == "provision")
-  puts "Installing required plugins..."
-  system "vagrant plugin install #{required_plugins}"
-  system "vagrant plugin update #{required_plugins}"
-  ENV['VAGRANT_PLUGINS_UPDATED'] = 'true'
-  # Restart vagrant after plugin updates
-  exec "vagrant #{ARGV.join(' ')}"
+%w(vagrant-vbguest vagrant-triggers).each do |plugin|
+  unless Vagrant.has_plugin? plugin
+    puts "Plugin #{plugin} is not installed. Install it with:"
+    puts "vagrant plugin install #{plugin}"
+  end
 end
 
 Vagrant.configure(2) do |config|
@@ -41,7 +35,7 @@ Vagrant.configure(2) do |config|
     vb.cpus = 1
   end
 
-  config.vm.provision "ansible" do |ansible|
+  config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = 'ansible/development-playbook.yml'
     ansible.inventory_path = 'ansible/development.ini'
     ansible.limit = 'all'

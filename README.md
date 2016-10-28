@@ -20,7 +20,7 @@ The code lacks tests and we have not had much time for feedback on the search ex
 
 ### Vagrant
 
-Development is done in Vagrant. You will need to have [Vagrant](https://www.vagrantup.com/) and [Ansible](http://docs.ansible.com/ansible/intro_installation.html) installed.
+Development is done in Vagrant. You will need to have [Vagrant](https://www.vagrantup.com/) installed.
 
 Check out the code:
 
@@ -32,6 +32,7 @@ cd ocracoke
 Start vagrant:
 
 ```sh
+vagrant plugin install vagrant-vbguest vagrant-triggers
 vagrant up
 ```
 
@@ -55,7 +56,7 @@ On the host visit Rails: <http://localhost:8090/jobs>. This route is protected w
 
 ### OCR a Resource
 
-This will show you all the rake tasks available for ocracoke:
+This will show you all the rake tasks available for Ocracoke. In another terminal run the following:
 
 ```sh
 vagrant ssh
@@ -72,7 +73,7 @@ bin/rake ocracoke:queue_from_ncsu_id[LD3928-A23-1947]
 That task will use an NCSU Libraries API to get the list of identifiers for images associated with this resource. You should now see one "resource_ocr" job in the queue. Now we need to run a worker to process the jobs. This is the suggested queue order though you can change it to suit your needs.
 
 ```sh
-QUEUE=ocr,word_boundaries,index,concatenate_txt,pdf,delayed,notification,resource_ocr REDO_OCR=true bin/rake resque:work
+QUEUE=ocr,word_boundaries,index,concatenate_txt,annotation_list,pdf,delayed,resource_ocr REDO_OCR=true bin/rake resque:work
 ```
 
 You should see output on the console that the jobs are working. The Resque web interface will show that one worker is working, and you can see the status of all the queues.
@@ -80,6 +81,10 @@ You should see output on the console that the jobs are working. The Resque web i
 ### Search Inside
 
 At this point you ought to be able to see the result for Ocracoke in the search inside results: <http://localhost:8090/search/LD3928-A23-1947?q=ocracoke>
+
+You may need to run a Solr commit first:
+
+`bin/rake ocracoke:solr:commit`
 
 ### Suggestions
 
