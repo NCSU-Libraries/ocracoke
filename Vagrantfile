@@ -1,10 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-%w(vagrant-vbguest vagrant-triggers).each do |plugin|
+vagrant_plugins = %w(vagrant-vbguest vagrant-triggers)
+vagrant_plugins.each do |plugin|
   unless Vagrant.has_plugin? plugin
     puts "Plugin #{plugin} is not installed. Install it with:"
-    puts "vagrant plugin install #{plugin}"
+    puts "vagrant plugin install #{vagrant_plugins.join(' ')}"
+    exit
   end
 end
 
