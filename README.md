@@ -20,7 +20,16 @@ The code lacks tests and we have not had much time for feedback on the search ex
 
 ### Vagrant
 
-Development is done in Vagrant. Check out the code.  Start vagrant:
+Development is done in Vagrant. You will need to have [Vagrant](https://www.vagrantup.com/) and [Ansible](http://docs.ansible.com/ansible/intro_installation.html) installed.
+
+Check out the code:
+
+```sh
+git clone git@github.com:NCSU-Libraries/ocracoke.git
+cd ocracoke
+```
+
+Start vagrant:
 
 ```sh
 vagrant up

@@ -1,6 +1,19 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+if ENV['VAGRANT_PLUGINS_UPDATED']=='true'
+   alreadyUpdated = 'true'
+end
+required_plugins = %s(vagrant-vbguest vagrant-triggers)
+if alreadyUpdated != 'true' && (ARGV[0] == "up" || ARGV[0] == "provision")
+  puts "Installing required plugins..."
+  system "vagrant plugin install #{required_plugins}"
+  system "vagrant plugin update #{required_plugins}"
+  ENV['VAGRANT_PLUGINS_UPDATED'] = 'true'
+  # Restart vagrant after plugin updates
+  exec "vagrant #{ARGV.join(' ')}"
+end
+
 Vagrant.configure(2) do |config|
   # This box works better than the centos project created one
   config.vm.box = "boxcutter/centos72"
