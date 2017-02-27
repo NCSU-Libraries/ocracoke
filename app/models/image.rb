@@ -1,5 +1,16 @@
 class Image < ApplicationRecord
+
+  include DirectoryFileHelpers
+
   belongs_to :resource
+
+  before_destroy do |image|
+    FileUtils.rm_rf directory
+  end
+
+  def directory
+    directory_for_identifier identifier
+  end
 
   def index
     indexer = OcrIndexer.new(resource: resource.identifier, image: identifier)

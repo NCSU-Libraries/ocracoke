@@ -1,5 +1,16 @@
 class Resource < ApplicationRecord
+
+  include DirectoryFileHelpers
+
   has_many :images
+
+  before_destroy do |image|
+    FileUtils.rm_rf directory
+  end
+
+  def directory
+    directory_for_identifier identifier
+  end
 
   def create_pdf
     PdfCreator.new(identifier, image_identifiers).create

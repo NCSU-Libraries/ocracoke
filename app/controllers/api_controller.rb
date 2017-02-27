@@ -4,7 +4,11 @@ class ApiController < ApplicationController
 
   def ocr_resource
     ResourceOcrJob.perform_later params[:resource], params[:images]
-    render json: 'success'
+    render json: 'success starting OCR job'
+  end
+
+  def destroy_ocr_resource
+    render json 'success destroying OCR'
   end
 
 end
