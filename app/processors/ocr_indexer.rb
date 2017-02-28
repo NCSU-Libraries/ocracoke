@@ -30,9 +30,9 @@ class OcrIndexer
       i.indexed = DateTime.now
       i.save
 
-      puts "add #{@image}: #{add}"
+      Rails.logger.info "Solr add #{@image}: #{add}"
     else
-      puts "File does not exist: #{final_txt_filepath(@image)}"
+      Rails.logger.info "File does not exist: #{final_txt_filepath(@image)}"
     end
   end
 

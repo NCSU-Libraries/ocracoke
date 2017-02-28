@@ -6,6 +6,13 @@ class Resource < ApplicationRecord
 
   before_destroy do |image|
     FileUtils.rm_rf directory
+    solr_delete
+  end
+
+  def solr_delete
+    solr = RSolr.connect url: Rails.configuration.ocracoke['solr_url']
+    del = solr.delete_by_query "resource:#{identifier}"
+    Rails.logger.info "Solr delete #{identifier}: #{del}"
   end
 
   def directory
