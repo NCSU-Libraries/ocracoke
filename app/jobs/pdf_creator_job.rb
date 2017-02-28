@@ -1,7 +1,7 @@
 class PdfCreatorJob < ApplicationJob
   queue_as :pdf
 
-  def perform(resource, images, percentage=50)
+  def perform(resource, images, percentage=50, tries=0)
     puts "PdfCreatorJob: #{resource}"
     pc = PdfCreator.new(resource, images, percentage)
     if pc.pdf_exists? && !ENV['REDO_OCR']
@@ -17,8 +17,12 @@ class PdfCreatorJob < ApplicationJob
         end
       else
         puts "Failed PdfCreatorJob #{resource}"
-        raise "Failed PdfCreatorJob #{resource}"
-        # PdfCreatorJob.set(wait: 10.minutes).perform_later resource, images, percentage
+        if tries < 6
+          tries += 1
+          PdfCreatorJob.set(wait: 10.minutes).perform_later resource, images, percentage, tries
+        else
+          raise "Failed PdfCreatorJob #{resource}"
+        end
       end
     else
       # Sometimes files haven't been processed or finished writing yet so we
