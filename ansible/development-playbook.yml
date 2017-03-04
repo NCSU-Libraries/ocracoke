@@ -17,12 +17,6 @@
     - role: basic-setup
     - role: dev-dummy-cert
     - role: dev-link-opt-rails
-    # - role: dev-open-firewall
-    #   ports:
-    #     - 443
-    #     - 80
-    #     - 3000
-    #     - 8983
     - role: franklinkim.environment
       environment_config:
         RAILS_ENV: "{{ passenger_app_env }}"

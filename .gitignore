@@ -30,3 +30,4 @@
 # with: bundle install --path vendor/cache
 /vendor/cache/ruby
 /vendor/cache/*.gem
+/public/ocr
