@@ -38,6 +38,14 @@ vagrant up
 
 While this is installing the appropriate box and provisioning it, you can look through the /ansible directory to get some idea of all the dependencies and how the application gets deployed to a production environment.
 
+If you have issues with guest additions or the shared folder not mounting try running the following commands. This CentOS box appears not to have these installed by default.
+
+From the host: `vagrant ssh`
+
+On the guest: `sudo yum update && sudo yum -y install kernel-headers kernel-devel && exit`
+
+From the host: `vagrant reload`
+
 ### Solr
 On the host visit Solr at <http://localhost:8984>. You should see the "ocracoke" Solr core under "Core Admin."
 
@@ -82,7 +90,7 @@ You should see output on the console that the jobs are working. The Resque web i
 
 At this point you ought to be able to see the result for Ocracoke in the search inside results: <http://localhost:8090/search/LD3928-A23-1947?q=ocracoke>
 
-You may need to run a Solr commit first:
+You may need to run a Solr commit first before you see results:
 
 `bin/rake ocracoke:solr:commit`
 

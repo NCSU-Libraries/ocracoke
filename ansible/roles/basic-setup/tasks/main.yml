@@ -9,6 +9,8 @@
     state: present
     update_cache: yes
   with_items:
+    - kernel-headers
+    - kernel-devel
     - git-core
     - curl
     - zlib

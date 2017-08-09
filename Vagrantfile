@@ -18,8 +18,7 @@ Vagrant.configure(2) do |config|
   # using a specific IP.
   config.vm.network "private_network", ip: "192.168.33.30"
 
-  config.vm.synced_folder '.', '/vagrant', type: 'nfs', mount_options: ['nolock']
-  # :mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
+  config.vm.synced_folder '.', '/vagrant'
 
   config.vm.network "forwarded_port", guest: 80, host: 8088,
       auto_correct: true
