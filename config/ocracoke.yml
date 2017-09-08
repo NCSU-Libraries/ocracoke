@@ -1,6 +1,6 @@
 development:
   ocr_directory: /access-images/ocr/
-  iiif_base_url: https://iiif-staging01.lib.ncsu.edu/iiif
+  iiif_base_url: https://iiif-staging02.lib.ncsu.edu/iiif
   ocracoke_base_url: "https://ocr-staging01.lib.ncsu.edu/ocr/"
   canvas_url_template: "http://scrc.lib.ncsu.edu/sal_staging/canvas/{id}"
   solr_url: http://localhost:8983/solr/ocracoke
