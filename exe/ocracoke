@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+Rails.application.config.active_job.queue_adapter = :inline
+Ocracoke::CLI.start(ARGV)

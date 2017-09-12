@@ -115,7 +115,7 @@ There is currently no user interface for adding OCR jobs. You may eventually wan
 Or you could use the API for sending OCR jobs in. This is one way that NCSU Libraries can kick jobs off from a separate application.
 
 ```sh
-curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"resource": "ua102_002-001-bx0012-013-008", "images": ["ua102_002-001-bx0012-013-008_001","ua102_002-001-bx0012-013-008_002","ua102_002-001-bx0012-013-008_003"]}' -H  "Authorization: Token token=scams_token, user=scams" http://localhost:8090/api/ocr_resource
+curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"resource": "ua102_002-001-bx0012-013-008", "images": ["ua102_002-001-bx0012-013-008_0001","ua102_002-001-bx0012-013-008_0002","ua102_002-001-bx0012-013-008_0003"]}' -H  "Authorization: Token token=scams_token, user=scams" http://localhost:8090/api/ocr_resource
 ```
 
 You should now see 1 job in the resource_ocr queue. Take a look in `./config/api_tokens.yml` for the valid users and tokens.
@@ -244,6 +244,34 @@ We deploy updates to the application with Capistrano and could share a recipe wi
 - ocracoke.yml
 - secrets.yml
 - .env (or include .env.production that overrides .env)
+
+## CLI
+
+A basic command line interface is available. This allows for running discrete tasks without rerunning everything. It reuses the ActiveJobs but first sets the job runner to be inline so that you do not need to run a background job worker.
+
+See what tasks are currently available:
+
+```sh
+bin/rails runner exe/ocracoke
+```
+
+OCR an image from a resource:
+
+```sh
+bin/rails runner exe/ocracoke ocr -i ua102_002-001-bx0012-013-008_0001 -r ua102_002-001-bx0012-013-008
+```
+
+Sometimes you may need to redo the OCR step so add an environment variable:
+
+```sh
+REDO_OCR=true bin/rails runner exe/ocracoke ocr -i ua102_002-001-bx0012-013-008_0001 -r ua102_002-001-bx0012-013-008
+```
+
+Create the annotation lists.
+
+```sh
+bin/rails runner exe/ocracoke annotate -i ua102_002-001-bx0012-013-008_0001
+```
 
 ## TODO
 

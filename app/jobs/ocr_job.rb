@@ -1,13 +1,18 @@
 class OcrJob < ApplicationJob
   queue_as :ocr
 
-  # Provide a way to redo the OCR for an item
+  # TODO: Provide a way to redo the OCR for an item
   def perform(image, resource=nil)
     puts "OcrJob: #{image}"
     ocr_creator = OcrCreator.new(image)
     if ocr_creator.ocr_exists? && !ENV['REDO_OCR']
       puts "OCR already exists for #{image}"
     else
+      if resource
+        r = Resource.find_or_create_by(identifier: resource)
+        Image.find_or_create_by(identifier: image, resource: r)
+      end
+
       ocr_creator.process
       if ocr_creator.ocr_exists?
         WordBoundariesJob.perform_later image
