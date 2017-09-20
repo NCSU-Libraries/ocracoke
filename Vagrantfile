@@ -12,8 +12,9 @@ end
 
 Vagrant.configure(2) do |config|
   # This box works better than the centos project created one
-  config.vm.box = "boxcutter/centos72"
-
+  config.vm.box = "geerlingguy/centos7"
+  config.vm.box_version = "1.2.4"
+  
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   config.vm.network "private_network", ip: "192.168.33.30"
@@ -34,6 +35,7 @@ Vagrant.configure(2) do |config|
     vb.linked_clone = true
     vb.memory = 1024
     vb.cpus = 1
+    # vb.gui = true
   end
 
   config.vm.provision "ansible_local" do |ansible|

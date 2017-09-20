@@ -21,12 +21,16 @@
       environment_config:
         RAILS_ENV: "{{ passenger_app_env }}"
     - role: ocr
-    - role: rvm_io.rvm1-ruby
+    - role: rvm_io.ruby
       rvm1_rubies:
         - "{{ ruby_version }}"
-    - role: rvm-setup
-      users:
-        - vagrant
+      rvm1_bundler_install: True
+      rvm1_user: 'vagrant'
+      rvm1_rvm_version: 'stable'
+      rvm1_autolib_mode: 3
+    # - role: rvm-setup
+    #   users:
+    #     - vagrant
     - role: mariadb
       databases:
         - "{{project_name}}"
