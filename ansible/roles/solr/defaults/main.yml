@@ -1,2 +1,4 @@
 port: 8983
 service_name: solr
+solr_connect_host: localhost
+core_name: ocracoke
