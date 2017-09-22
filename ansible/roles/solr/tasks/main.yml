@@ -3,10 +3,12 @@
   yum:
     pkg: lsof
     state: latest
+
 - name: download solr
   get_url:
     url: http://archive.apache.org/dist/lucene/solr/{{version}}/solr-{{version}}.tgz
     dest: ~/solr-{{version}}.tgz
+
 - name: untar solr
   unarchive:
     copy: no
@@ -14,41 +16,56 @@
     # group: vagrant
     src: ~/solr-{{version}}.tgz
     dest: ~/.
+
 - name: install solr service
   shell: bin/install_solr_service.sh ~/solr-{{version}}.tgz -f chdir=~/solr-{{version}} -p {{port}} -s {{service_name}}
+
 - name: move solr files to /home/solr
   shell: mv ~/solr-{{version}} /home/solr/.
   args:
     creates: /home/solr/solr-{{version}}
+
 - name: solr should own solr binaries
   file:
     path: /home/solr/solr-{{version}}
     owner: solr
     recurse: yes
+
 - name: add solr user to deploy group
   user:
     name: solr
     group: solr
     groups: "{{group}}"
     append: yes
+
 - name: confdir should be readable by deploy group
   file:
     path: "{{confdir}}"
     recurse: yes
     group: "{{group}}"
     mode: "g+rX"
+
+- name: Check current list of Solr cores.
+  uri:
+    url: http://{{ solr_connect_host }}:{{ port }}/solr/admin/cores?action=STATUS&core={{core_name}}
+    return_content: yes
+  register: solr_cores_current
+
 - name: create core
   become_user: solr
   shell: bin/solr create -c "{{item}}" -d "{{confdir}}"
   args:
     chdir: ~/solr-{{version}}
+  when: "item not in solr_cores_current.content"
   with_items: "{{cores}}"
+
 - name: remove conf directory
   become_user: solr
   file:
     path: /var/{{service_name}}/data/{{item}}/conf
     state: absent
   with_items: "{{cores}}"
+
 - name: symlink confdir
   become_user: solr
   file:
