@@ -47,7 +47,7 @@
 
 - name: Check current list of Solr cores.
   uri:
-    url: http://{{ solr_connect_host }}:{{ port }}/solr/admin/cores?action=STATUS&core={{core_name}}
+    url: http://{{ solr_connect_host }}:{{ port }}/solr/admin/cores
     return_content: yes
   register: solr_cores_current
 

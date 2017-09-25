@@ -50,6 +50,7 @@
       vars:
         - version: 6.1.0
         - port: 8983
+        - core_name: ocracoke
       service_name: solr-ocracoke
       confdir: /vagrant/solr_conf
       cores:
