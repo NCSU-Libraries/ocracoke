@@ -45,8 +45,6 @@
     - role: java
       version: 1.8.0
     - role: solr
-      # version: 6.1.0
-      # port: 8983
       vars:
         - version: 6.1.0
         - port: 8983
