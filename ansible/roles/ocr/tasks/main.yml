@@ -25,13 +25,17 @@
   args:
     chdir: ~/hocr-tools
 
-
 - name: OCR | hocr-tools python package should be readable and executable
-  shell: chmod ugo+rx /usr/lib/python2.7/site-packages/hocr_tools-*.egg
+  file:
+    path: "{{ item }}"
+    mode: "u+rx,g+rx,o+rx"
+  with_fileglob:
+    - /usr/lib/python2.7/site-packages/hocr_tools-*.egg
 
-# FIXME: is there a better way to do this chmod?
 - name: OCR | hocr command line tools should be executable
-  command: chmod ugo+rx "/usr/bin/{{ item }}"
+  file:
+    path: "/usr/bin/{{ item }}"
+    mode: "u+rx,g+rx,o+rx"
   with_items:
     - hocr-pdf
     - hocr-check
