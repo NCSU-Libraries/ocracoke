@@ -24,8 +24,8 @@ module DirectoryFileHelpers
   def final_json_file_filepath(id)
     final_output_base_filepath(id) + '.json'
   end
-  def final_annotation_list_filepath(id)
-    final_output_base_filepath(id) + '-annotation-list.json'
+  def final_annotation_list_filepath(id, granularity)
+    final_output_base_filepath(id) + '-annotation-list-' + granularity + '.json'
   end
 
   # Temporary filepaths
@@ -66,3 +66,5 @@ module DirectoryFileHelpers
   end
 
 end
+
+
