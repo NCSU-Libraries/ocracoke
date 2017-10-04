@@ -11,7 +11,6 @@ class AnnotationListCreator
     @annotation_list = Hash.new("annotation_list")
     @granularity_list.map do |granularity|
        hr = HocrOpenAnnotationCreator.new final_hocr_filepath(@identifier), granularity
-       hr.annotation_list
        @annotation_list[granularity] = hr.annotation_list
        @list = @annotation_list[granularity].to_json
        write_files(@list, granularity)
