@@ -9,9 +9,7 @@ class AnnotationListJob < ApplicationJob
     #elsif alc.preconditions_met?
     
     if alc.preconditions_met?
-      alc.create_word_list
-      alc.create_line_list
-      alc.create_paragraph_list
+      alc.create_annotation_lists
     else
       puts "AnnotationListJob: Preconditions not met #{image}"
       AnnotationListJob.set(wait: 5.minutes).perform_later image
