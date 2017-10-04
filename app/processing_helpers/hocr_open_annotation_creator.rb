@@ -2,34 +2,31 @@ class HocrOpenAnnotationCreator
 
   include CanvasHelpers
 
-  def initialize(hocr_path)
+  def initialize(hocr_path, granularity)
     @hocr = File.open(hocr_path){ |f| Nokogiri::XML(f) }
     @identifier = File.basename(hocr_path, '.hocr')
     @first_two = @identifier[0,2]
+    @granularity = granularity
+    @selector = get_selector
   end
 
-  def annotation_list
-    {
-      :"@context" => "http://iiif.io/api/presentation/2/context.json",
-      :"@id" => annotation_list_id,
-      :"@type" => "sc:AnnotationList",
-      resources: resources
-    }
-  end
+  def get_selector
+    if @granularity == "word"
+     "ocrx_word"
+    elsif @granularity == "line"
+     "ocr_line"
+    elsif @granularity == "paragraph"
+      "ocr_par"
+    else
+      ""
+     end
+ end
 
-  def annotation_list_id_base
-    File.join Rails.configuration.ocracoke['ocracoke_base_url'], @first_two, @identifier, @identifier + '-annotation-list'
-  end
-
-  def annotation_list_id
-    annotation_list_id_base + '.json'
-  end
-
-  def resources
-    @hocr.xpath(".//*[contains(@class, 'ocr_line')]").map do |line|
-      text = line.text().gsub("\n", ' ').squeeze(' ').strip
+ def resources
+    @hocr.xpath(".//*[contains(@class, '#{@selector}')]").map do |chunk|
+      text = chunk.text().gsub("\n", ' ').squeeze(' ').strip
       if !text.empty?
-        title = line['title']
+        title = chunk['title']
         title_parts = title.split('; ')
         xywh = '0,0,0,0'
         title_parts.each do |title_part|
@@ -45,11 +42,29 @@ class HocrOpenAnnotationCreator
           end
         end
         annotation(text, xywh)
-      end
+       end
     end.compact
   end
 
-  def annotation(chars, xywh)
+  def annotation_list
+    {
+      :"@context" => "http://iiif.io/api/presentation/2/context.json",
+      :"@id" => annotation_list_id,
+      :"@type" => "sc:AnnotationList",
+      :"@label" => "OCR text granularity of #{@granularity}",
+      resources: resources
+    }
+  end
+
+  def annotation_list_id_base
+   File.join Rails.configuration.ocracoke['ocracoke_base_url'], @first_two, @identifier, @identifier + '-annotation-list-' + @granularity
+  end
+
+  def annotation_list_id
+    annotation_list_id_base + '.json'
+  end
+
+ def annotation(chars, xywh)
     {
       :"@id" => annotation_id(xywh),
       :"@type" => "oa:Annotation",
@@ -73,3 +88,6 @@ class HocrOpenAnnotationCreator
   end
 
 end
+
+
+
