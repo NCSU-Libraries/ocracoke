@@ -1,8 +1,0 @@
----
-
-- include: config.yml
-  tags:
-    - system
-    - environment
-    - config
-    - environment-config
