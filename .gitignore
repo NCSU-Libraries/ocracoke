@@ -26,6 +26,10 @@
 # imdone-atom
 .imdone
 
+#Ignore all the roles which are downloaded from galaxy
+ansible/roles/*
+-ansible/roles/franklinkim.environment
+
 # In order for Passenger within Vagrant to see the gems we install the bundle
 # with: bundle install --path vendor/cache
 /vendor/cache/ruby
