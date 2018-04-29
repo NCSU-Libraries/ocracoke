@@ -43,12 +43,12 @@ On the host visit Solr at <http://localhost:8984>. You should see the "ocracoke"
 
 ### Rails
 
-SSH to vagrant machine, migrate the database, and start Rails:
+SSH to vagrant machine, load the database schema, and start Rails:
 ```sh
 vagrant ssh
 cd /vagrant
 bundle
-bin/rake db:migrate
+bin/rake db:schema:load
 bin/rails s -b 0.0.0.0
 ```
 
