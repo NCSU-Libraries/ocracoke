@@ -8,13 +8,16 @@ gem 'resque'
 gem 'resque-web', require: 'resque_web'
 gem 'resque-scheduler'
 gem 'resque-scheduler-web'
-# gem 'sinatra', '2.0.0.beta2'
+gem 'sinatra', '>= 2.0.2'
 gem 'mysql2'
 gem 'nokogiri-pretty'
 gem 'dotenv-rails'
 gem 'whenever', require: false
 gem 'addressable'
 gem 'thor'
+
+# security update 2019-03-14
+gem "ffi", ">= 1.9.24"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
