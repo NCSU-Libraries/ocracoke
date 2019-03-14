@@ -21,7 +21,7 @@
       environment_config:
         RAILS_ENV: "{{ passenger_app_env }}"
     - role: ocr
-    - role: rvm_io.ruby
+    - role: rvm.ruby
       rvm1_rubies:
         - "{{ ruby_version }}"
       rvm1_bundler_install: True

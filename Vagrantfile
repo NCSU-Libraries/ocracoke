@@ -12,14 +12,14 @@ end
 
 Vagrant.configure(2) do |config|
   # This box works better than the centos project created one
-  config.vm.box = "geerlingguy/centos7"
-  config.vm.box_version = "1.2.4"
-  
+  config.vm.box = "centos/7"
+  # config.vm.box_version = "1.2.4"
+
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   config.vm.network "private_network", ip: "192.168.33.30"
 
-  config.vm.synced_folder '.', '/vagrant'
+  config.vm.synced_folder '.', '/vagrant', type: "sshfs", ssh_opts_append: "-o Compression=yes", sshfs_opts_append: "-o cache=no"
 
   config.vm.network "forwarded_port", guest: 80, host: 8088,
       auto_correct: true

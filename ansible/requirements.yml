@@ -1,7 +1,7 @@
 #requirements.yml
 
 # from galaxy
-- src: rvm_io.ruby
+- src: rvm.ruby
 
 - src: geerlingguy.redis
 
@@ -37,4 +37,3 @@
 - src: https://github.com/NCSU-Libraries-Ansible-Roles/solr.git
   version: "dev"
   name: solr
-
