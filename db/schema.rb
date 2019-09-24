@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160902033551) do
+ActiveRecord::Schema.define(version: 20190924185102) do
 
   create_table "images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "identifier"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20160902033551) do
     t.datetime "pdf"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "callback"
     t.index ["identifier"], name: "index_resources_on_identifier", unique: true, using: :btree
   end
 

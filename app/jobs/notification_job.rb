@@ -3,14 +3,14 @@ class NotificationJob < ApplicationJob
 
   # Send a notification
   def perform(resource)
-    puts "NotificationJob: #{resource}"
+    puts "NotificationJob: #{resource.identifier}"
     notifier = Notifier.new(resource)
     if notifier.preconditions_met?
       response = notifier.notify
       if response.status == 200
-        puts "NotificationJob: complete #{resource}"
+        puts "NotificationJob: complete #{resource.identifier}"
       else
-        puts "NotificationJob: fail #{resource}"
+        puts "NotificationJob: fail #{resource.identifier}"
         raise "NotificationJob response not 200 OK. #{response.body}"
       end
     else

@@ -10,7 +10,7 @@ class ApiController < ApplicationController
       destroyer.destroy
       render json: "success destroying OCR: #{params[:resource]}"
     else
-      ResourceOcrJob.perform_later params[:resource], params[:images]
+      ResourceOcrJob.perform_later params[:resource], params[:images], params[:callback]
       render json: 'success starting OCR job'
     end
   end
@@ -21,4 +21,6 @@ __END__
 
 From terminal outside of Vagrant (ie where SCAMS runs):
 
-curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"resource": "gng00126", "images": ["gng00126_001","gng00126_002","gng00126_003","gng00126_004"]}' -H  "Authorization: Token token=scams_token, user=scams" -k http://localhost:8090/api/ocr_resource
+curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -H  "Authorization: Token token=scams_token, user=scams" -k http://localhost:8090/api/ocr_resource -d '{"resource": "gng00126",
+"callback": "http://localhost/callback",
+"images": ["gng00126_001","gng00126_002"]}' 

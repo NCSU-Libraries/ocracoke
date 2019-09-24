@@ -214,7 +214,7 @@ If notifications are turned on then the application will also queue a job to not
 
 This API is currently under development and it only POSTs the resource identifier via JSON. In the future it may send the image identifiers, size of the resulting PDF, and other data.
 
-In the included `./config/ocracoke.yml` file notifications are turned off. An example is given of how to send a notification to the host machine on port 3000 to the ``/api_incoming/ocr` path.
+In the included `./config/ocracoke.yml` file notifications are turned off. Examples are given of how to send a notification to the host machine on port 3000 to the `/api_incoming/ocr` path. The `host_token` value can be set if a callback URI with the given host requires a token with the request.
 
 ## Delivering OCR
 
