@@ -1,15 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-vagrant_plugins = %w(vagrant-vbguest vagrant-triggers)
-vagrant_plugins.each do |plugin|
-  unless Vagrant.has_plugin? plugin
-    puts "Plugin #{plugin} is not installed. Install it with:"
-    puts "vagrant plugin install #{vagrant_plugins.join(' ')}"
-    exit
-  end
-end
-
 Vagrant.configure(2) do |config|
   # This box works better than the centos project created one
   config.vm.box = "centos/7"
@@ -48,18 +39,6 @@ Vagrant.configure(2) do |config|
     ansible.inventory_path = 'ansible/development.ini'
     ansible.limit = 'all'
     # ansible.verbose = 'vvvv'
-  end
-
-  # https://github.com/kierate/vagrant-port-forwarding-info
-  # vagrant plugin install vagrant-triggers
-  # Get the port details in these cases:
-  # - after "vagrant up" and "vagrant resume"
-  config.trigger.after [:up, :resume] do
-    run "#{File.dirname(__FILE__)}/get-ports.sh #{@machine.id}"
-  end
-  # - before "vagrant ssh"
-  config.trigger.before :ssh do
-    run "#{File.dirname(__FILE__)}/get-ports.sh #{@machine.id}"
   end
 
   # Until the patch in 1.8.6 is released do not try to insert ssh key. Or
