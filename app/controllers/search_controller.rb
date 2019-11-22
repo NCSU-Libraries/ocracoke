@@ -1,10 +1,16 @@
 class SearchController < ApplicationController
 
   def search
+    resource = Resource.find_by_identifier params[:id]
+    image_count = resource.images.count
+    if image_count == 0
+      image_count = 20
+    end
     solr = RSolr.connect url: Rails.configuration.ocracoke['solr_url']
     solr_params = {
       q: params[:q],
-      fq: "resource:#{params[:id]}"
+      fq: "resource:#{params[:id]}",
+      rows: image_count
     }
     # FIXME:iiifsi
     @response = solr.get 'search', params: solr_params
