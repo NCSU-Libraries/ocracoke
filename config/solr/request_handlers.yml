@@ -1,0 +1,26 @@
+---
+- name: /search
+  class: solr.SearchHandler
+  defaults:
+    defType: dismax
+    "q.alt": "*:*"
+    wt: json
+    mm: 1
+    indent: "true"
+    fl: id,resource
+    hl: "true"
+    "hl.fl": txt
+    "hl.snippets": 50
+    df: txt
+    qf: txt
+    pf: txt
+
+- name: /suggest
+  class: solr.SearchHandler
+  defaults:
+    suggest: "true"
+    "suggest.count": 10
+    "suggest.dictionary": suggester
+    wt: json
+  components:
+    - suggest

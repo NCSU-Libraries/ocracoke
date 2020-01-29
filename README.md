@@ -32,7 +32,6 @@ cd ocracoke
 Start vagrant:
 
 ```sh
-vagrant plugin install vagrant-vbguest vagrant-triggers
 vagrant up
 ```
 
@@ -48,8 +47,8 @@ SSH to vagrant machine, load the database schema, and start Rails:
 vagrant ssh
 cd /vagrant
 bundle
-bin/rake db:schema:load
-bin/rails s -b 0.0.0.0
+rake db:schema:load
+rails s -b 0.0.0.0
 ```
 
 On the host visit Rails: <http://localhost:8090/jobs>. This route is protected with HTTP Basic Auth. Look in the `.env` file for the credentials. You should see the Resque jobs page.
@@ -61,13 +60,13 @@ This will show you all the rake tasks available for Ocracoke. In another termina
 ```sh
 vagrant ssh
 cd /vagrant
-bin/rake -T ocr
+rake -T ocr
 ```
 
 We're going to OCR a single resource from the NCSU Libraries' collection. This is a Commencement program that mentions a graduate from Ocracoke. It also ought to OCR quickly enough.
 
 ```sh
-bin/rake ocracoke:queue_from_ncsu_id[LD3928-A23-1947]
+rake ocracoke:queue_from_ncsu_id[LD3928-A23-1947]
 ```
 
 That task will use an NCSU Libraries API to get the list of identifiers for images associated with this resource. You should now see one "resource_ocr" job in the queue. Now we need to run a worker to process the jobs. This is the suggested queue order though you can change it to suit your needs.

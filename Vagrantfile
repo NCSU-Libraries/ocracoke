@@ -36,7 +36,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ansible_local" do |ansible|
     ansible.galaxy_role_file = 'ansible/requirements.yml'
     ansible.playbook = 'ansible/development-playbook.yml'
-    ansible.inventory_path = 'ansible/development.ini'
+    ansible.inventory_path = 'ansible/inventories/development.ini'
     ansible.limit = 'all'
     # ansible.verbose = 'vvvv'
   end

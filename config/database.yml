@@ -6,12 +6,12 @@ default: &default
 
 development:
   <<: *default
-  database: ocr
-  username: ocr
-  password: ocr
+  database: ocracoke
+  username: ocracoke
+  password: ocracoke
 
-test:
-  <<: *default
-  database: ocr_test
-  username: ocr
-  password: ocr
+# test:
+#   <<: *default
+#   database: ocr_test
+#   username: ocr
+#   password: ocr

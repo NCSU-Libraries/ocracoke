@@ -1,0 +1,3 @@
+---
+- source: txt
+  dest: autocomplete
