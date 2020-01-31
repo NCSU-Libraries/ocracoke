@@ -17,5 +17,15 @@ namespace :ocracoke do
       Image.all.each {|image| image.queue_index_job }
     end
 
+    desc 'reindex specific resource'
+    task :reindex_resource, [:resource] => :environment do |t, args|
+      resource_identifier = args[:resource]
+      resource = Resource.find_by_identifier resource_identifier
+      resource.images.each do |image|
+        image.queue_index_job
+      end
+
+    end
+
   end
 end
