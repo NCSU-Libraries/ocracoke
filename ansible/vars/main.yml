@@ -9,7 +9,7 @@ rvm1_autolib_mode: 3
 
 redis_appendonly: "yes"
 
-solr_version: "8.2.0"
+solr_version: "8.4.1"
 solr_create_user: true
 solr_user: vagrant
 solr_remove_cruft: true

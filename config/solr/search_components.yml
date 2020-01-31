@@ -10,5 +10,5 @@
     contextField: resource_context_field
     suggestAnalyzerFieldType: suggest
     buildOnCommit: "false"
-    buildOnOptimize: "true"
+    buildOnOptimize: "false"
     buildOnStartup: "false"

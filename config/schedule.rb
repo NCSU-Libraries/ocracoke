@@ -19,5 +19,5 @@
 
 # Learn more: http://github.com/javan/whenever
 every :day, at: '4 am' do
-  rake 'ocracoke:solr:optimize', output: { error: '~/ocracoke-solr-optimize-error.log', standard: '~/ocracoke-solr-optimize-standard.log'}
+  rake 'ocracoke:solr:build_suggester', output: { error: '~/ocracoke-solr-build_suggester-error.log', standard: '~/ocracoke-solr-build_suggester-standard.log'}
 end
