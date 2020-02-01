@@ -7,6 +7,7 @@ class SolrConfigLoader
     @copy_fields = YAML.load_file(copy_fields_yaml_path)
     @search_components = YAML.load_file(search_components_yaml_path)
     @request_handlers = YAML.load_file(request_handlers_yaml_path)
+    @common_properties = YAML.load_file(common_properties_yaml_path)
   end
 
   def load_all
@@ -15,6 +16,7 @@ class SolrConfigLoader
     load_copy_fields
     load_search_components
     load_request_handlers
+    load_common_properties
   end
 
   def load_field_types
@@ -67,6 +69,16 @@ class SolrConfigLoader
     request_add_and_retry_replace(config_url, request_handler, 'add-requesthandler', 'update-requesthandler')
   end
 
+  def load_common_properties
+    @common_properties.each do |common_property|
+      add_common_property(common_property)
+    end
+  end
+
+  def add_common_property(common_property)
+    request_add_and_retry_replace(config_url, common_property, 'set-property', nil)
+  end
+
   def request_add_and_retry_replace(url, data, add, replace)
     add_data = {add => data}
     puts "Add data:"
@@ -117,6 +129,10 @@ class SolrConfigLoader
 
   def search_components_yaml_path
     full_yaml_path('search_components')
+  end
+
+  def common_properties_yaml_path
+    full_yaml_path('common_properties')
   end
 
 

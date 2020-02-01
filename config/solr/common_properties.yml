@@ -1,0 +1,7 @@
+---
+- "updateHandler.autoCommit.maxDocs": 10
+- "updateHandler.autoCommit.maxTime": 15000
+- "updateHandler.autoCommit.openSearcher": false
+- "updateHandler.autoSoftCommit.maxDocs": 100
+- "updateHandler.autoSoftCommit.maxTime": 60000
+- "updateHandler.commitWithin.softCommit": true
