@@ -40,5 +40,12 @@ namespace :ocracoke do
       puts response
     end
 
+    desc 'delete all solr documents'
+    task delete_all: :environment do |t|
+      solr = RSolr.connect url: Rails.configuration.ocracoke['solr_url']
+      puts solr.delete_by_query('*:*')
+      puts solr.commit
+    end
+
   end
 end
