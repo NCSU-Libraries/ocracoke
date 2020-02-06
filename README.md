@@ -14,7 +14,7 @@ Rails application to create, index, and search text from page images and provide
 
 This code is being used in production at NCSU Libraries for [full text resources](http://d.lib.ncsu.edu/collections/catalog?f%5Bfulltext_bs%5D%5B%5D=true) on our Rare & Unique Digital Collections site. It was developed quickly to be able to provide improved access to the [Nubian Message](http://d.lib.ncsu.edu/collections/catalog?f%5Bispartof_facet%5D%5B%5D=Nubian+Message) student newspaper.
 
-The code lacks tests and we have not had much time for feedback on the search experience from users. The suggester could certainly be improved.
+The code lacks tests and we have not had feedback on the search experience from users. The suggester could certainly be improved.
 
 ## Quick start
 
@@ -53,6 +53,18 @@ rails s -b 0.0.0.0
 
 On the host visit Rails: <http://localhost:8090/jobs>. This route is protected with HTTP Basic Auth. Look in the `.env` file for the credentials. You should see the Resque jobs page.
 
+### Solr Configuration
+
+The Solr config must be updated before indexing documents:
+
+```sh
+vagrant ssh
+cd /vagrant
+rake ocracoke:solr:config
+```
+
+You'll see the output of what changes are being made the Solr schema and config.
+
 ### OCR a Resource
 
 This will show you all the rake tasks available for Ocracoke. In another terminal run the following:
@@ -72,7 +84,7 @@ rake ocracoke:queue_from_ncsu_id[LD3928-A23-1947]
 That task will use an NCSU Libraries API to get the list of identifiers for images associated with this resource. You should now see one "resource_ocr" job in the queue. Now we need to run a worker to process the jobs. This is the suggested queue order though you can change it to suit your needs.
 
 ```sh
-QUEUE=ocr,word_boundaries,index,concatenate_txt,annotation_list,pdf,delayed,resource_ocr REDO_OCR=true bin/rake resque:work
+QUEUE=ocr,word_boundaries,index,concatenate_txt,annotation_list,pdf,delayed,resource_ocr REDO_OCR=true rake resque:work
 ```
 
 You should see output on the console that the jobs are working. The Resque web interface will show that one worker is working, and you can see the status of all the queues.
@@ -83,14 +95,18 @@ At this point you ought to be able to see the result for Ocracoke in the search 
 
 You may need to run a Solr commit first before you see results:
 
-`bin/rake ocracoke:solr:commit`
+`rake ocracoke:solr:commit`
+
+You can also optimize the Solr index:
+
+`rake ocracoke:solr:optimize`
 
 ### Suggestions
 
-Suggestions will not work yet until the suggestion dictionary is built. This is a time consuming process so it is something that would be run nightly in a production. You can trigger building the suggester by optimizing the Solr index:
+Suggestions will not work yet until the suggestion dictionary is built. This is a time consuming process so it is something that would be run nightly in a production. You can trigger building the suggester with a rake task:
 
-```
-bin/rake ocracoke:solr:optimize
+```sh
+rake ocracoke:solr:build_suggester
 ```
 
 You should now see a suggestion for "ocra" <http://localhost:8090/suggest/LD3928-A23-1947?q=ocra>
