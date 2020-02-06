@@ -23,5 +23,5 @@ every :day, at: '3 am' do
 end
 
 every :day, at: '4 am' do
-  rake 'ocracoke:solr:build_suggester', output: { error: '~/ocracoke-solr-build_suggester-error.log', standard: '~/ocracoke-solr-build_suggester-standard.log'}
+  command 'curl "http://localhost:8983/solr/ocracoke/suggest?wt=json&suggest.build=true"', output: { error: '~/ocracoke-solr-build_suggester-error.log', standard: '~/ocracoke-solr-build_suggester-standard.log'}
 end
