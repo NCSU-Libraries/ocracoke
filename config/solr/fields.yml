@@ -1,0 +1,30 @@
+---
+- name: resource
+  type: string
+  indexed: true
+  multiValued: true
+
+- name: resource_context_field
+  type: string
+  indexed: true
+  stored: true
+  multiValued: false
+
+- name: txt
+  type: text
+  stored: true
+  termVectors: true
+  multiValued: false
+  indexed: true
+
+- name: suggest_txt
+  type: suggest
+  indexed: true
+  stored: true
+  multiValued: true
+
+- name: autocomplete
+  type: textSpell
+  indexed: true
+  stored: false
+  multiValued: true

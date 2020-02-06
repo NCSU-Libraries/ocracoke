@@ -1,0 +1,41 @@
+---
+- name: text
+  class: solr.TextField
+  analyzer:
+    tokenizer:
+      class: solr.StandardTokenizerFactory
+    filters:
+      - class: solr.ClassicFilterFactory
+      - class: solr.LowerCaseFilterFactory
+      - class: solr.PorterStemFilterFactory
+
+- name: textSpell
+  class: solr.TextField
+  positionIncrementGap: 100
+  omitNorms: true
+  analyzer:
+    tokenizer:
+      class: solr.StandardTokenizerFactory
+    filters:
+      - class: solr.ClassicFilterFactory
+      - class: solr.LowerCaseFilterFactory
+
+- name: suggest
+  class: solr.TextField
+  positionIncrementGap: 100
+  analyzer:
+    charFilters:
+      - class: solr.PatternReplaceCharFilterFactory
+        pattern: [^a-zA-Z0-9]
+        replacement: " "
+    tokenizer:
+      class: solr.WhitespaceTokenizerFactory
+    filters:
+      - class: solr.WordDelimiterFilterFactory
+        generateWordParts: 1
+        generateNumberParts: 1
+        catenateWords: 1
+        catenateNumbers: 1
+        catenateAll: 0
+        splitOnCaseChange: 1
+      - class: solr.LowerCaseFilterFactory

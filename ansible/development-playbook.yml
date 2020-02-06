@@ -1,13 +1,12 @@
 ---
-- hosts: ocracoke
+- hosts: all
   become: yes
   become_method: sudo
   become_user: root
   remote_user: root
   gather_facts: yes
-  vars:
-    project_name: ocr
-    ruby_version: ruby-2.3.1
+  vars_files:
+    - vars/main.yml
   pre_tasks:
     - yum:
         pkg: "mysql-devel"
@@ -15,45 +14,16 @@
         update_cache: yes
   roles:
     - role: basic-setup
-    - role: dev-dummy-cert
-    - role: dev-link-opt-rails
-    - role: franklinkim.environment
-      environment_config:
-        RAILS_ENV: "{{ passenger_app_env }}"
-    - role: ocr
     - role: rvm.ruby
-      rvm1_rubies:
-        - "{{ ruby_version }}"
-      rvm1_bundler_install: True
-      rvm1_user: 'vagrant'
-      rvm1_rvm_version: 'stable'
-      rvm1_autolib_mode: 3
-    # - role: rvm-setup
-    #   users:
-    #     - vagrant
-    - role: mariadb
+    - role: geerlingguy.mysql
       databases:
         - "{{project_name}}"
         - "{{project_name}}_test"
-    - role: passenger-apache
-      ruby: "{{ ruby_version }}"
-      passenger_max_pool_size: 1
-      apache_virtualhost_lines:
-        - Header set Access-Control-Allow-Origin "*"
     - role: geerlingguy.redis
-      redis_appendonly: "yes"
-    - role: java
+    - role: geerlingguy.java
       version: 1.8.0
-    - role: solr
-      vars:
-        - version: 6.1.0
-        - port: 8983
-        - core_name: ocracoke
-      service_name: solr-ocracoke
-      confdir: /vagrant/solr_conf
-      cores:
-        - ocracoke
-      group: vagrant
+    - role: geerlingguy.solr
+    - role: ocr
   post_tasks:
     # These post_tasks are to create the same directories as exist on the
     # production server so that we can actually try this out!

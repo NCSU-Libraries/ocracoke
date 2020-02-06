@@ -2,38 +2,16 @@
 
 # from galaxy
 - src: rvm.ruby
-
+- src: geerlingguy.mysql
 - src: geerlingguy.redis
+- src: geerlingguy.java
+- src: geerlingguy.solr
 
 # from github, overriding the name and specifying a specific tag
 - src: https://github.com/NCSU-Libraries-Ansible-Roles/basic-setup.git
   version: "v1.1.0"
   name: basic-setup
 
-- src: https://github.com/NCSU-Libraries-Ansible-Roles/dev-dummy-cert.git
-  version: "v1.1.0"
-  name: dev-dummy-cert
-
-- src: https://github.com/NCSU-Libraries-Ansible-Roles/dev-link-opt-rails.git
-  version: "v1.1.0"
-  name: dev-link-opt-rails
-
-- src: https://github.com/NCSU-Libraries-Ansible-Roles/java.git
-  version: "v1.1.0"
-  name: java
-
-- src: https://github.com/NCSU-Libraries-Ansible-Roles/mariadb.git
-  version: "v1.1.0"
-  name: mariadb
-
 - src: https://github.com/NCSU-Libraries-Ansible-Roles/ocr.git
   version: "v1.1.1"
   name: ocr
-
-- src: https://github.com/NCSU-Libraries-Ansible-Roles/passenger-apache.git
-  version: "v1.1.1"
-  name: passenger-apache
-
-- src: https://github.com/NCSU-Libraries-Ansible-Roles/solr.git
-  version: "dev"
-  name: solr

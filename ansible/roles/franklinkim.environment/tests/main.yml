@@ -1,8 +1,0 @@
----
-
-- hosts: all
-  roles:
-    - franklinkim.environment
-  vars:
-    environment_config:
-      LC_ALL: C

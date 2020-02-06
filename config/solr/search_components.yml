@@ -1,0 +1,14 @@
+---
+- name: suggest
+  class: solr.SuggestComponent
+  suggester:
+    name: suggester
+    lookupImpl: AnalyzingInfixLookupFactory
+    indexPath: suggester_infixdata_dir
+    dictionaryImpl: DocumentDictionaryFactory
+    field: suggest_txt
+    contextField: resource_context_field
+    suggestAnalyzerFieldType: suggest
+    buildOnCommit: "false"
+    buildOnOptimize: "false"
+    buildOnStartup: "false"
